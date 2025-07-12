@@ -297,7 +297,7 @@ export class SalesComponent implements OnInit{
           break;
         }
       }
-      this.form.controls["fecha_creacion"].setValue((new Date()).toLocaleString("sv-SE").split(" ").join("T"));
+      this.form.controls["created_at"].setValue((new Date()).toLocaleString("sv-SE").split(" ").join("T"));
       this.nuevaLinea();
       this.modalRefCE = this.modalService.open(this.modalCE, {backdrop: "static", animation:true, size: "xl"});
     });
