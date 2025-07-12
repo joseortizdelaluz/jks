@@ -1,0 +1,276 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Usuarios" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            Email
+            <input type="text" name="email" class="form-control" [(ngModel)]="filter.email" placeholder="jose.ortiz.luz@gmail.com">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Status
+            <ng-select [(ngModel)]="filter.is_active" placeholder="Todos">
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            Nombre
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.first_name" placeholder="Juan Perez" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="loadUsers()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button id="btnGroupABCUsers" type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Usuarios
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="createUser()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="editUser()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="viewUser()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="deleteUser()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridUsuarios
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'"
+                
+                [height]="600" [sortable]="true" [altrows]="true" 
+                [columnsresize]="true" [filterable]="true" [enabletooltips]="true"
+                >
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <!-- 
+        MODAL ALTA Y EDITAR USUARIO
+    -->
+    <ng-template #modalUser let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="saveUser($event, this.jqxGridEmpresasAsignadas, this.jqxGridClientesAsignadas)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span for="razon_social"><strong class="text-danger">*</strong> Nombre(s)</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" name="first_name" formControlName="first_name">
+                                <div *ngIf="getFormControl('first_name', form)?.errors && getFormControl('first_name', form)?.touched">
+                                    <small *ngIf="getFormControl('first_name', form)?.hasError('required')" class="text-danger">
+                                        El <strong>nombre</strong> es requerido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <span for="last_name">Apellido(s)</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" name="last_name" formControlName="last_name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <span for="username"><strong class="text-danger">*</strong> Usuario</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="username">
+                                <div *ngIf="getFormControl('username', form)?.errors && getFormControl('username', form)?.touched">
+                                    <small *ngIf="getFormControl('username', form)?.hasError('required')" class="text-danger">
+                                        El <strong>nombre de usuario</strong> es requerido.
+                                    </small>
+                                    <small *ngIf="getFormControl('username', form)?.getError('usernameAvailable') != null" class="text-danger">
+                                        El nombre de usuario <strong>{{ form.get('username')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <span for="password"><strong class="text-danger">*</strong> Contraseña</span>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="btn btn-primary btn-sm" (click)="generatePassword()">
+                                            <i class="fa fa-retweet" aria-hidden="true"></i>
+                                            Generar
+                                        </button>
+                                    </div>
+                                    <input [type]="type" class="form-control form-control-sm form-control-bold" formControlName="password">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary btn-sm" (click)="viewPassword()">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div *ngIf="getFormControl('password', form)?.errors && getFormControl('password', form)?.touched">
+                                    <small *ngIf="getFormControl('password', form)?.hasError('required')" class="text-danger">
+                                        El <strong>contraseña</strong> es requerida.
+                                    </small>
+                                    <small *ngIf="getFormControl('password', form)?.hasError('minlength')" class="text-danger">
+                                        El <strong>contraseña</strong> debe de tener minimo 5 caracteres.
+                                    </small> 
+                                </div>
+
+                                <div *ngIf="getFormControl('password', form)?.touched && getFormControl('repassword', form)?.touched">
+                                    <small *ngIf="
+                                        (form.get('password')?.value.length > 0 && 
+                                        form.get('repassword')?.value.length > 0) && 
+                                        form.get('password')?.value != form.get('repassword')?.value" class="text-danger">
+                                        La contraseña y su confirmación no son iguales
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <span for="email"><strong class="text-danger">*</strong> Correo</span>
+                                <input type="email" class="form-control form-control-sm form-control-bold" name="email" formControlName="email">
+                                <div *ngIf="getFormControl('email', form)?.errors && getFormControl('email', form)?.touched">
+                                    <small *ngIf="getFormControl('email', form)?.hasError('required')" class="text-danger">
+                                        El <strong>correo</strong> es requerido.
+                                    </small>
+                                    <small *ngIf="getFormControl('email', form)?.hasError('email')" class="text-danger">
+                                        El correo <strong>{{ form.get('email')?.value }}</strong> no es valido.
+                                    </small>
+                                    <small *ngIf="getFormControl('email', form)?.getError('emailAvailable') != null" class="text-danger">
+                                        El correo <strong>{{ form.get('email')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <span for="repassword"><strong class="text-danger">*</strong> Re Contraseña</span>
+                                <input [type]="type" class="form-control form-control-sm form-control-bold" name="repassword" formControlName="repassword">
+                            </div>
+                            <div class="col-ms-12 col-md-4 col-lg-3">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong class="text-primary">
+                                    Empresas
+                                </strong>
+                                <hr style="margin-top: 0;">
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-lg-5">
+                                <strong>Disponibles</strong>
+                                <jqxGrid #jqxGridEmpresasDisponibles
+                                    [width]="'100%'"
+                                    [source]="dataAdapterCompanyDisponibles" 
+                                    [columns]="columnsDragDrop"
+                                    [selectionmode]="'checkbox'">
+                                </jqxGrid>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-lg-2">
+                                <div class="clearfix"></div>
+                                <div class="my-5 py-5">
+                                    <button type="button" class="btn btn-primary btn-block" (click)="agregarRegistro(this.jqxGridEmpresasDisponibles, this.jqxGridEmpresasAsignadas)">
+                                        <i class="fas fa-angle-double-right fa-lg fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-block" (click)="removerRegistro(this.jqxGridEmpresasDisponibles, this.jqxGridEmpresasAsignadas)">
+                                        <i class="fas fa-angle-double-left fa-lg fa-fw"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-lg-5">
+                                <strong>Asignadas</strong>
+                                <jqxGrid #jqxGridEmpresasAsignadas
+                                    [width]="'100%'"
+                                    [source]="dataAdapterCompanyAsignadas" 
+                                    [columns]="columnsDragDrop"
+                                    [selectionmode]="'checkbox'">
+                                </jqxGrid>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong class="text-primary">
+                                    Clientes
+                                </strong>
+                                <hr style="margin-top: 0;">
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-lg-5">
+                                <strong>Disponibles</strong>
+                                <jqxGrid #jqxGridClientesDisponibles
+                                    [width]="'100%'"
+                                    [source]="dataAdapterCustomerDisponibles" 
+                                    [columns]="columnsDragDrop"
+                                    [selectionmode]="'checkbox'">
+                                </jqxGrid>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-lg-2">
+                                <div class="clearfix"></div>
+                                <div class="my-5 py-5">
+                                    <button type="button" class="btn btn-primary btn-block" (click)="agregarRegistro(this.jqxGridClientesDisponibles, this.jqxGridClientesAsignadas)">
+                                        <i class="fas fa-angle-double-right fa-lg fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-block" (click)="removerRegistro(this.jqxGridClientesDisponibles, this.jqxGridClientesAsignadas)">
+                                        <i class="fas fa-angle-double-left fa-lg fa-fw"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-lg-5">
+                                <strong>Asignadas</strong>
+                                <jqxGrid #jqxGridClientesAsignadas
+                                    [width]="'100%'"
+                                    [source]="dataAdapterCustomerAsignadas" 
+                                    [columns]="columnsDragDrop"
+                                    [selectionmode]="'checkbox'">
+                                </jqxGrid>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+</section>

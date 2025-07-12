@@ -1,0 +1,209 @@
+div.dd_document_area {
+  min-width: 1020px;
+  z-index: 0;
+  padding: 30px 0px;
+  width: 100%;
+  background-color: #cccccc;
+}
+
+div.tabs-elementos {
+  height: 100%;
+}
+
+div.dd_document_page {
+  background-color: #ffffff;
+  border: 1px #666666 solid;
+  margin: 0 10px 30px auto;
+  -moz-box-shadow: #333333 3px 3px 12px;
+  -webkit-box-shadow: #333333 3px 3px 12px;
+  box-shadow: #333333 3px 3px 12px;
+  background-repeat: no-repeat;
+}
+
+div#dd_page_template {
+  width: 818px;
+  height: 1059px;
+  border: 1px solid #000;
+  position: relative;
+}
+
+div#menu_izquierdo {
+  width: auto;
+  max-width: 251px;
+  height: 100%;
+  position: fixed;
+  background-color: #fff;
+  opacity: 1;
+  top: 40px;
+  z-index: 12;
+}
+
+.lista-propiedades {
+  border: 1px solid #ccc;
+  width: 90%;
+  margin: 4px auto;
+  list-style: none;
+  text-align: center;
+}
+
+div.contenedor_label {
+  position: absolute;
+  font-size: 10px;
+  height: 17px;
+  top: -18px;
+  background-color: orange;
+  color: #ffffff;
+  visibility: hidden;
+  z-index: 9;
+  padding: 0 5px;
+  font-family: Serif;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.detalle-plantilla {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+}
+
+.detalle-plantilla.active {
+  border: 1px solid orange !important;
+}
+
+button.btn-alinear.active {
+  border: 3px inset;
+}
+
+button.btn-style.active {
+  border: 3px inset;
+}
+
+._bordes_ {
+  position: relative;
+}
+
+._label_ {
+  height: 17px;
+  width: auto;
+  padding-left: 5px;
+}
+
+._body_ {
+  position: relative;
+}
+
+/*Estilos de alineacion*/
+input.radio_alineacion[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+input.radio_alineacion[type="radio"] + i {
+  cursor: pointer;
+}
+
+input.radio_alineacion[type="radio"]:checked + i {
+  outline: 4px solid #000;
+}
+
+/*Estilos para decoración*/
+ul.estilos_ {
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+ul.estilos_ li {
+  display: inline-block;
+}
+
+ul.estilos_ input[type="checkbox"][id^="cbestilos"] {
+  display: none;
+}
+
+ul.estilos_ label {
+  padding: 1px;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ul.estilos_ label::before {
+  background-color: white;
+  color: white;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  border: 1px solid grey;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 28px;
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+
+ul.estilos_ label i {
+  height: 42px;
+  width: 42px;
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+}
+
+ul.estilos_ :checked + label {
+  border-color: #ddd;
+}
+
+ul.estilos_ :checked + label i {
+  transform: scale(0.9);
+  box-shadow: 0 0 5px #333;
+  z-index: -1;
+}
+
+/**/
+.de_item {
+  border: 1px solid #ccc8c8;
+  position: absolute;
+}
+
+.de_item.active {
+  border-color: #1111ff;
+  z-index: 200 !important;
+}
+
+.de_item_label {
+  position: absolute;
+  font-size: 10px;
+  height: 12px;
+  top: -13px;
+  background-color: #3366ff;
+  color: #ffffff;
+  visibility: hidden;
+  z-index: 999900;
+  padding: 0 5px;
+  font-family: Serif;
+  /* Prevent label changes when content style changes*/
+  text-decoration: none;
+  font-weight: normal;
+  text-style: normal;
+}
+
+.de_item.active .de_item_label {
+  visibility: visible;
+}
+
+.de_item_borders {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}

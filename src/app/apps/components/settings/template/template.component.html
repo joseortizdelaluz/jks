@@ -1,0 +1,128 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Plantillas para documentos PDF" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Status
+            <select [(ngModel)]="filter.is_active" placeholder="Todos" class="form-select">
+                <option [value]="">Todos</option>
+                <option [value]="true">Activos</option>
+                <option [value]="false">Inactivos</option>
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            Nombre
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.nombre" placeholder="Comprobante de pago(2.0)" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Plantillas
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="create()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="edit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="delete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="copiar()">
+                        <i class="fas fa-clone fa-sm fa-fw text-primary"></i>
+                        Duplicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridTemplates
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalTemplate let-modal>
+        <form [formGroup]="formTemplate" novalidate>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Crear y/o editar plantilla.
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="modal.close(false)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12" style="text-align: right;">
+                            
+                            <button type="button" class="btn btn-primary btn-sm" >
+                                <i class="fas fa-search fa-lg fa-fw"></i>
+                                Buscar
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-primary btn-sm">
+                                <i class="fas fa-retweet fa-lg fa-fw"></i>
+                                Procesar
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash fa-lg fa-fw"></i>
+                                Limpiar todo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-sm fa-fw"></i>
+                    Cerrar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+
+
+</section>

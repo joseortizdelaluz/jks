@@ -1,0 +1,210 @@
+@import url("../style/variables.css");
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.modal-header-delete{
+    background: #dc3545;
+    color: #FFF;
+}
+
+.modal-header-create{
+    background: #2196F3;
+    color: #FFF;
+}
+
+.modal-header-edit{
+    background: #403f3f;
+    color: #FFF;
+}
+
+.modal-header-default{
+    background: #343a40;
+    color: #FFF;
+}
+
+.modal-header-detail{
+    background: #1c5187;
+    color: #FFF;
+}
+
+/* File Upload */
+.fake-shadow {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+.fileUpload #logo-id {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 33px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.img-preview {
+    max-width: 30%;
+    max-height: 40%;
+}
+
+.btn-primary{
+    color: #fff;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: var(color-primary-hover);
+    border-color: var(color-primary-hover);
+}
+
+.btn-primary.disabled, .btn-primary:disabled{
+    color: #fff;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.text-primary {
+    color: var(--color-primary) !important;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+div.circle{
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    color: white;
+    font-weight: bolder;
+    text-align: center;
+    text-align: -webkit-center;
+    padding-top: 4px;
+    vertical-align: middle;
+}
+
+div.content_wrap{
+    width:600px;
+    height:380px;
+}
+
+div.content_wrap div.left{
+    float:left;
+    width: 250px;
+}
+
+div.content_wrap div.right{
+    float:right;
+    width: 340px;
+}
+
+div.zTreeDemoBackground {
+    width:100%;
+    height:100%;
+    text-align:left;
+}
+
+ul.ztree {
+    /* margin-top:10px; */
+    border: 1px solid #617775;
+    background:#f0f6e4;
+    width:100%;
+    height:100%;
+    overflow-y:scroll;
+    overflow-x:auto;
+}
+
+ul.log {
+    border:1px solid #617775;
+    background: #f0f6e4;
+    width:300px;
+    height:170px;
+    overflow: hidden;
+}
+
+ul.log.small {
+    height:45px;
+}
+
+ul.log li {
+    color: #666666;
+    list-style:none;
+    padding-left: 10px;
+}
+
+ul.log li.dark{
+    background-color: #E3E3E3;
+}
+
+div.ruler {
+    height:20px;
+    width:220px;
+    background-color:#f0f6e4;
+    border: 1px solid #333;
+    margin-bottom: 5px;
+    cursor: pointer
+}
+
+div.ruler div.cursor {
+    height:20px; 
+    width:30px; 
+    background-color:#5e5e5e; 
+    color:white; 
+    text-align: right; 
+    padding-right: 5px; 
+    cursor: pointer
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 300px;
+    overflow: auto;
+}
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+button.close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    background-color: red;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.modal-header .close{
+    padding: 0rem;
+    margin: 0;
+}
+
+.fa-2xx{
+    font-size: 1.4rem;
+}
+
+.form-control-bold{
+    font-weight: bold;
+}
+
+.modal-content .modal-header {
+    background-color: var(--color-primary);
+    color: #FFF;
+    font-weight: bold;
+}
+
+.modal-content .modal-title {
+    color: #FFF;
+    font-weight: bold;
+}

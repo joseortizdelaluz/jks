@@ -1,0 +1,184 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Impuestos federales y locales" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Estatus
+            <ng-select 
+            [(ngModel)]="filter.is_active"
+            style="width: 100%;"
+            [markFirst]="true">
+                <ng-option [value]="'T'">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-9">
+            <span for="filtro_razon_social">Nombre</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="filter.nombre" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-lg fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Impuestos
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridTaxs
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalCE let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar | Impuestos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="nombre"><strong class="text-danger">*</strong> Nombre</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="nombre" placeholder="Nombre banco">
+                                <div *ngIf="getFormControl('nombre', form)?.errors && getFormControl('nombre', form)?.touched">
+                                    <small *ngIf="getFormControl('nombre', form)?.hasError('required')" class="text-danger">
+                                        La <strong>nombre</strong> es requerida.
+                                    </small>
+                                    <!-- <small *ngIf="getFormControl('nombre', form)?.getError('bankNameAvailable') != null" class="text-danger">
+                                        El banco <strong>{{ form.get('nombre')?.value }}</strong> ya se encuentra dado de alta.
+                                    </small> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="impuesto"><strong class="text-danger">*</strong> Impuesto</span>
+                                <ng-select 
+                                    formControlName="impuesto"
+                                    placeholder="Seleccione una opción">
+                                    <ng-option *ngFor="let tt of list_taxs" [value]="tt.value">{{tt.label}} [{{tt.value}}]</ng-option>
+                                </ng-select>
+
+                                <div *ngIf="getFormControl('impuesto', form)?.errors && getFormControl('impuesto', form)?.touched">
+                                    <small *ngIf="getFormControl('impuesto', form)?.hasError('required')" class="text-danger">
+                                        El <strong>impuesto</strong> es requerido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="tasa_cuota"><strong class="text-danger">*</strong> Tasa o Cuota</span>
+                                <ng-select 
+                                    [items]="list_tasa_cuota"
+                                    bindValue="value"
+                                    bindLabel="label"
+                                    formControlName="tasa_cuota"
+                                    placeholder="Seleccione una opción">
+                                </ng-select>
+                                <div *ngIf="getFormControl('tasa_cuota', form)?.errors && getFormControl('tasa_cuota', form)?.touched">
+                                    <small *ngIf="getFormControl('tasa_cuota', form)?.hasError('required')" class="text-danger">
+                                        El <strong>Tasa o Cuota</strong> es requerido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="tipo"><strong class="text-danger">*</strong> Tipo</span>
+                                <ng-select 
+                                    [items]="list_tipos"
+                                    bindValue="value"
+                                    bindLabel="label"
+                                    formControlName="tipo"
+                                    placeholder="Seleccione una opción">
+                                </ng-select>
+                                <div *ngIf="getFormControl('tipo', form)?.errors && getFormControl('tipo', form)?.touched">
+                                    <small *ngIf="getFormControl('tipo', form)?.hasError('required')" class="text-danger">
+                                        El <strong>Tipo</strong> es requerido.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="valor">Tasa</span>
+                                <input type="number" formControlName="valor" class="form-control form-control-sm" placeholder="0.16">
+
+                                <div class="form-group form-check my-4">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="descripcion">Descripción</span>
+                                <textarea rows="4" class="form-control" formControlName="descripcion"></textarea>
+                            </div>
+                            
+                            
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    
+</section>

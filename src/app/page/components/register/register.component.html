@@ -1,0 +1,274 @@
+
+<div class="container">
+
+    <div class="row py-5">
+        <div class="col-12">
+            <h3>Instrucciones de registro</h3>
+        </div>
+
+        <div class="col-12">
+            <div class="col-12 border rounded my-3 p-2">
+                1. <strong>Asegúrese y rectifique</strong> que su información proporcionada sea correcta.<br>
+                2. Cada campo con <strong>*</strong> es requerido para su registro, verifique su información.<br>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="register($event)" *ngIf="step == 1">
+        <div class="row g-3">
+            <div class="col-12 py-1 text-uppercase">
+                <h3>información de la cuenta de usuario</h3>
+                <hr>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label"><span class="text-danger">*</span> Nombre</label>
+                <input type="text" class="form-control" formControlName="first_name" placeholder="José">
+                <div *ngIf="getFormControl('first_name', form)?.errors && getFormControl('first_name', form)?.touched">
+                    <small *ngIf="getFormControl('first_name', form)?.hasError('required')" class="text-danger">
+                        El <strong>nombre</strong> es requerido.
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="inputPassword4" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" formControlName="last_name" placeholder="Lopez Ramirez">
+            </div>
+    
+            <div class="col-md-4">
+                <label for="inputAddress" class="form-label"><span class="text-danger">*</span> Nombre de usuario</label>
+                <input type="text" class="form-control" formControlName="username" placeholder="joseph">
+                <div *ngIf="getFormControl('username', form)?.errors && getFormControl('username', form)?.touched">
+                    <small *ngIf="getFormControl('username', form)?.hasError('required')" class="text-danger">
+                        El <strong>nombre de usuario</strong> es requerido.
+                    </small>
+                    <small *ngIf="getFormControl('username', form)?.getError('usernameAvailable') != null" class="text-danger">
+                        El nombre de usuario <strong>{{ form.get('username')?.value }}</strong> ya se encuentra en uso.
+                    </small>
+                </div>
+            </div>
+    
+            <div class="col-md-8">
+                <label for="inputAddress2" class="form-label"><span class="text-danger">*</span> Correo electrónico</label>
+                <input type="text" class="form-control" formControlName="email" placeholder="ejemplo@gmail.com">
+                <div *ngIf="getFormControl('email', form)?.errors && getFormControl('email', form)?.touched">
+                    <small *ngIf="getFormControl('email', form)?.hasError('required')" class="text-danger">
+                        El <strong>correo</strong> es requerido.
+                    </small>
+                    <small *ngIf="getFormControl('email', form)?.hasError('email')" class="text-danger">
+                        El correo <strong>{{ form.get('email')?.value }}</strong> no es valido.
+                    </small>
+                    <small *ngIf="getFormControl('email', form)?.getError('emailAvailable') != null" class="text-danger">
+                        El correo <strong>{{ form.get('email')?.value }}</strong> ya se encuentra en uso.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label"><span class="text-danger">*</span> Contraseña</label>
+                <div class="input-group mb-3">
+                    <button class="btn btn-info" type="button" id="button-addon1" (click)="generatePassword()">
+                        <i class="fas fa-calculator fa-lg fa-fw"></i>
+                        Generar
+                    </button>
+                    <input [type]="type" class="form-control" autocomplete="off" formControlName="password" placeholder="1cIgpku70000j//*?!">
+                    <button class="btn btn-info" type="button" id="button-addon2" (click)="viewPassword()">
+                        <i class="fas {{type == 'password' ? 'fa-eye-slash' : 'fa-eye'}} fa-sm fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="inputState" class="form-label"><span class="text-danger">*</span> Confirme contraseña</label>
+                <input [type]="type" class="form-control" autocomplete="off" formControlName="repassword" placeholder="1cIgpku70000j//*?!">
+            </div>
+            <hr>
+    
+            <div class="col-12 py-4">
+                <button type="button" class="btn btn-primary" (click)="next()">
+                    <i class="fas fa-arrow-right fa-lg fa-fw"></i>
+                    <strong>Continuar</strong>
+                </button>
+            </div>
+    
+            <div class="col-12">
+                <div class="col-12 border rounded my-3 p-2">
+                    - La contraseña debe ser de longitud entre 8 y 50 caracteres.<br>
+                    - Debe contener al menos uno de los siguientes caracteres especiales: &#64;$%+=<br>
+                    - No debe contener espacios en blanco.<br>
+                    - Si desea, puede cálcular automáticamente su contraseña.<br>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form [formGroup]="formFiscal" (ngSubmit)="register($event)" *ngIf="step == 2">
+        <div class="row">
+            <div class="col-12 py-1 text-uppercase">
+                <h3>información fiscal</h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-5">
+                <label for="inputState" class="form-label"><span class="text-danger">*</span> Razón social</label>
+                <input type="text" class="form-control" formControlName="razon_social" placeholder="INDUSTRIA ILUMINADORA DE ALMACENES">
+                <div *ngIf="getFormControl('razon_social', formFiscal)?.errors && getFormControl('razon_social', formFiscal)?.touched">
+                    <small *ngIf="getFormControl('razon_social', formFiscal)?.hasError('required')" class="text-danger">
+                        El <strong>nombre o razon social</strong> es requerido.
+                    </small>
+                    <small *ngIf="getFormControl('razon_social', formFiscal)?.getError('checkStaffRazonSocial') != null" class="text-danger">
+                        La <strong>{{ formFiscal.get('razon_social')?.value }}</strong> ya se encuentra en uso.
+                    </small>
+                </div>
+            </div>
+    
+            <div class="col-md-3">
+                <label for="inputState" class="form-label"><span class="text-danger">*</span> RFC</label>
+                <input type="text" class="form-control" formControlName="rfc" placeholder="XAXX010101000">
+                <div *ngIf="getFormControl('rfc', formFiscal)?.errors && getFormControl('rfc', formFiscal)?.touched">
+                    <small *ngIf="getFormControl('rfc', formFiscal)?.hasError('required')" class="text-danger">
+                        El <strong>nombre o razon social</strong> es requerido.
+                    </small>
+                    <small *ngIf="getFormControl('rfc', formFiscal)?.getError('checkStaffRfc') != null" class="text-danger">
+                        La <strong>{{ formFiscal.get('rfc')?.value }}</strong> ya se encuentra en uso.
+                    </small>
+                </div>
+            </div>
+    
+            <div class="col-md-4">
+                <label for="inputState" class="form-label">
+                    <span class="text-danger">*</span> Régimen
+                </label>
+                <ng-select
+                    placeholder="Seleccione una opción"
+                    formControlName="regimen_id">
+                    <ng-option *ngFor="let r of list_regimenes" [value]="r.id"><strong>{{r.clave}}</strong>-{{r.descripcion}}</ng-option>
+                </ng-select>
+                <div *ngIf="getFormControl('regimen_id', formFiscal)?.errors && getFormControl('regimen_id', formFiscal)?.touched">
+                    <small *ngIf="getFormControl('regimen_id', formFiscal)?.hasError('required')" class="text-danger">
+                        El <strong>regimen fiscal</strong> es requerido.
+                    </small>
+                </div>
+            </div>
+    
+            
+                <div class="col-md-5 col-sm-12 col-lg-5">
+                    <span for="cp"><strong class="text-danger">*</strong> Código postal</span>
+                    <input 
+                    id="typeadead-template"
+                    type="number"
+                    class="form-control"
+                    formControlName="cp"
+                    [ngbTypeahead]="buscarCp"
+                    [resultFormatter]="resultFormatter"
+                    [inputFormatter]="inputFormatter"
+                    [resultTemplate]="rcp"
+                    (selectItem)="selectedCP($event.item)"
+                    #instance="ngbTypeahead"
+                    placeholder="Buscar CP"
+                    typeaheadOptionField="cp"/>
+                    <ng-template #rcp let-r="result" let-t="term">
+                        <div class="media p-1">
+                            <div class="media-body">
+                                <span>
+                                    <strong class="text-primary">{{r.cp}}</strong>
+                                    {{r.asenta}}
+                                </span>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div *ngIf="searching">
+                        <small class="form-text text-muted">Buscando...</small>
+                    </div>
+                    <div *ngIf="searchFailed">
+                        <div class="invalid-feedback">Lo sentimos, no se han encontrado resultados.</div>
+                    </div>
+                    <div *ngIf="getFormControl('cp', formFiscal)?.errors && getFormControl('cp', formFiscal)?.touched">
+                        <small *ngIf="getFormControl('cp', formFiscal)?.hasError('minLength')" class="text-danger">
+                            El <strong>CP</strong> debe de ser de 5 digitos.
+                        </small>
+                        <small *ngIf="getFormControl('cp', formFiscal)?.hasError('maxLength')" class="text-danger">
+                            El <strong>CP</strong> debe de ser de 5 digitos.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-md-7 col-sm-12 col-lg-7">
+                    <span for="calle">Calle</span>
+                    <input type="text" class="form-control" formControlName="calle" placeholder="Calle">
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-3">
+                    <span for="num_ext">Num Ext</span>
+                    <input type="text" class="form-control" formControlName="num_ext" placeholder="Número exterior">
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-3">
+                    <span for="num_int">Num Int</span>
+                    <input type="text" class="form-control" formControlName="num_int" placeholder="Número interior">
+                </div>
+                <div class="col-md-6 col-sm-12 col-lg-6">
+                    <span for="colonia">Colonia</span>
+                    <input type="text" class="form-control" formControlName="colonia" placeholder="Colonia">
+                </div>
+                <div class="col-md-6 col-sm-12 col-lg-6">
+                    <span for="colonia">Referencia</span>
+                    <input type="text" class="form-control" formControlName="referencia" placeholder="Referencia">
+                </div>
+                <div class="col-md-6 col-sm-12 col-lg-6">
+                    <span for="municipio">Municipio</span>
+                    <ng-select
+                        [items]="list_municipios"
+                        bindLabel="descripcion"
+                        bindValue="id"
+                        placeholder="Seleccione una opción"
+                        formControlName="municipio_id">
+                    </ng-select>
+                </div>
+                <div class="col-md-6 col-sm-12 col-lg-6">
+                    <span for="estado">Estado</span>
+                    <ng-select
+                        [items]="list_estados"
+                        bindLabel="descripcion"
+                        bindValue="id"
+                        placeholder="Seleccione una opción"
+                        (change)="loadMunicipios($event)"
+                        formControlName="estado_id">
+                    </ng-select>
+                </div>
+                <div class="col-md-6 col-sm-12 col-lg-6">
+                    <span for="estado"><strong class="text-danger">*</strong> País</span>
+                    <ng-select 
+                        [readonly]="true"
+                        [items]="list_paises" 
+                        bindLabel="descripcion" 
+                        bindValue="id" 
+                        placeholder="Seleccione una opción"
+                        (change)="loadEstados($event)"
+                        formControlName="pais_id">
+                    </ng-select>
+                </div>
+            
+                <div class="col-md-6">
+                    <span>Telefono</span>
+                    <input type="text" name="telefono" id="telefono" class="form-control" formControlName="telefono" placeholder="249 210 8684">
+                </div>
+
+            <div class="col-12 py-4">
+                <button type="button" class="btn btn-secondary" (click)="back()">
+                    <i class="fas fa-arrow-left fa-lg fa-fw"></i>
+                    Regresar
+                </button>
+                &nbsp;
+                <button type="submit" class="btn btn-primary">
+                    <strong>Registrame</strong>
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row py-5">
+        <a [routerLink]="['/login']">Iniciar sesión</a>
+    </div>
+</div>

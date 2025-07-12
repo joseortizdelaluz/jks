@@ -1,0 +1,75 @@
+<section class="my-5 pb-4" id="contenedor-login">
+    <div class="bg-white rounded-1"><!--border-->
+        <section class="w-100 p-4 d-flex justify-content-center pb-4">
+
+            <form [formGroup]="form" novalidate (ngSubmit)="login($event)" style="width: 22rem;">
+                <!-- Email input -->
+                <div class="form-outline mb-4 text-center">
+                    <strong style="font-size:xx-large;color: #ffc200;">Bienvenido</strong>
+                </div>
+                
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="username" style="margin-left: 0px;">
+                        <strong class="text-danger">*</strong> Nombre de usuario
+                    </label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Nombre de usuario o email" autocomplete="off" formControlName="username" />
+                    <div *ngIf="usernameField?.errors && usernameField?.touched">
+                        <small *ngIf="usernameField?.hasError('required')" class="text-danger">
+                            El <strong>nombre de usuario</strong> es requerido.
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="password" style="margin-left: 0px;">
+                        <strong class="text-danger">*</strong> Contraseña</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" autocomplete="off" formControlName="password" />
+                    <div *ngIf="passwordField?.errors && passwordField?.touched">
+                        <small *ngIf="passwordField?.hasError('required')" class="text-danger">
+                            La <strong>contraseña</strong> es requerida
+                        </small>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col d-flex justify-content-center">
+                        <span class="text-danger">{{ error }}</span>
+                    </div>
+                </div>
+
+                <!-- 2 column grid layout for inline styling -->
+                <div class="row mb-4">
+                    <div class="col d-flex justify-content-center">
+                        <!-- Checkbox -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked="">
+                            <label class="form-check-label" for="form2Example31"> Recordarme </label>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <!-- Simple link -->
+                        <a [routerLink]="['/recupera-acceso']">Olvidé mi contraseña?</a>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Ingresar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Register buttons -->
+                <div class="text-center">
+                    <p>¿Aun no se ha registrado?
+                        <a [routerLink]="['/registro']">Registrarme</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>

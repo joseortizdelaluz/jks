@@ -1,0 +1,215 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Registros patronales" class="row"></app-header-apps-label>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            <span for="filtro_razon_social">Empresa</span>
+            <ng-select [items]="list_companys_root" bindLabel="razon_social" bindValue="id"
+                (change)="selectedCompanyRoot($event)" [(ngModel)]="filter.company_id"
+                placeholder="Seleccione una opción">
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Status
+            <ng-select [(ngModel)]="filter.is_active" style="width: 100%;" [markFirst]="true">
+                <ng-option [value]="null">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <span for="filtro_razon_social">Número registro</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.numero_registro" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    R. Patronales
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            <!-- &nbsp;
+            <button class="btn btn-secondary btn-sm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                69B
+            </button> -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridRP
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+
+    <!--Modulos -->
+    <ng-template #modalCE let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Registro patronal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-8">
+                                <span><strong class="text-danger">*</strong> Empresa</span>
+                                <ng-select [items]="list_ce_companys" bindLabel="razon_social" bindValue="id"
+                                    placeholder="Selccione una opción"
+                                    formControlName="company_id"><!--(change)="selectedCompanyCE($event)"-->
+                                </ng-select>
+
+                                <div
+                                    *ngIf="getFormControl('company_id', form)?.errors && getFormControl('company_id', form)?.touched">
+                                    <small *ngIf="getFormControl('company_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione una <strong>empresa</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span for="numero_registro"><strong class="text-danger">*</strong> Numero registro</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="numero_registro" minlength="11" maxlength="11" placeholder="M0169484506">
+                                
+                                <div *ngIf="getFormControl('numero_registro', form)?.errors && getFormControl('numero_registro', form)?.touched">
+                                    <small *ngIf="getFormControl('numero_registro', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Proporcione el <strong>numero de registro</strong>.
+                                    </small>
+                                    <small *ngIf="getFormControl('numero_registro', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>Número de registro</strong> debe de tener una longitud de 11.
+                                    </small>
+                                    <small *ngIf="getFormControl('numero_registro', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>Número de registro</strong> debe de tener una longitud de 11.
+                                    </small>
+                                    <small *ngIf="getFormControl('numero_registro', form)?.getError('RPAvailable') != null" class="text-danger">
+                                        El numero de registro <strong>{{ form.get('numero_registro')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span for="numero_registro">Alias</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="alias" placeholder="Alias">
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Delegación</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="delegacion" placeholder="DELEGACIÓN">
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Subdelegación</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="delegacion" placeholder="DELEGACIÓN">
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Estado</span>
+                                <ng-select [items]="list_ce_estados" bindLabel="descripcion" bindValue="id"
+                                    placeholder="Selccione una opción"
+                                    formControlName="estado_id">
+                                </ng-select>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Prima de riesgo expedición</span>
+                                <input type="number" class="form-control form-control-sm" formControlName="prima_riesgo_expedicion" placeholder="0.00">
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Prima de riesgo actual</span>
+                                <input type="number" class="form-control form-control-sm" formControlName="prima_riesgo_actual" placeholder="0.00">
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Fecha expedición</span>
+                                <input type="date" class="form-control form-control-sm" formControlName="fecha_expedicion" placeholder="0000-00-00">
+                            </div>
+                            
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Area geografica</span>
+                                <ng-select formControlName="area_geografica_id" [items]="list_ce_areas_geograficas" bindLabel="nombre" bindValue="id"
+                                    placeholder="Selccione una opción"/>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <span>Clase de riesgo</span>
+                                <ng-select formControlName="clase_id" [items]="list_ce_clases_riesgo" bindLabel="nombre" bindValue="id"
+                                    placeholder="Selccione una opción"/>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group form-check my-4">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+
+</section>

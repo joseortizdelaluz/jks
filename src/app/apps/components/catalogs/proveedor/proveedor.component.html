@@ -1,0 +1,568 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Proveedores" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <span for="filtro_razon_social">Razón social</span>
+            <input type="text" name="email" class="form-control" [(ngModel)]="filter.razon_social" placeholder="Razón social">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Status
+            <ng-select 
+            [(ngModel)]="filter.is_active"
+            style="width: 100%;"
+            [markFirst]="true">
+                <ng-option [value]="'T'">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <span for="filtro_razon_social">RFC</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.rfc" placeholder="XAXX010101000" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="loadDataGrid()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button id="btnGroupABCUsers" type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Proveedores
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+            <button class="btn btn-secondary btn-sm">
+                <i class="fas fa-file-excel fa-sm fa-fw"></i>
+                Reporte
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridProveedores
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+
+    <ng-template #modalProveedor let-modal>
+
+        <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>General</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="razon_social" class="col-form-label">
+                                    <strong class="text-danger">*</strong>
+                                    Tipo persona
+                                </span>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_persona" id="tipo_moral" value="M"  checked formControlName="tipo_persona">
+                                    <label class="form-check-label" for="tipo_moral">Moral</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_persona" id="tipo_fisica" value="F" formControlName="tipo_persona">
+                                    <label class="form-check-label" for="tipo_fisica">Fisica</label>
+                                </div>
+                            </div>
+                
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="razon_social" class="col-form-label">
+                                    Sr / Sra
+                                </span>
+                                <input type="text" name="sr_sra" id="sr_sra" class="form-control" placeholder="Titulo" autocomplete="off" formControlName="sr_sra">
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="razon_social" class="col-form-label">
+                                    <strong class="text-danger">*</strong>
+                                    Nombre / Razon social
+                                </span>
+                                <input type="text" name="razon_social" id="razon_social" class="form-control" placeholder="Razón social" autocomplete="off" formControlName="razon_social">
+                                <div *ngIf="getFormControl('razon_social', form)?.errors && getFormControl('razon_social', form)?.touched">
+                                    <small *ngIf="getFormControl('razon_social', form)?.hasError('required')" class="text-danger">
+                                        El <strong>nombre y/o razon social</strong> es requerido.
+                                    </small>
+                                    <small *ngIf="getFormControl('razon_social', form)?.getError('razonSocialAvailable') != null" class="text-danger" id="mierdas1">
+                                        El proveedor <strong>{{ form.get('razon_social')?.value }}</strong> ya se encuentra dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="rfc" class="col-form-label">
+                                    R.F.C.
+                                </span>
+                                <input type="text" name="rfc" id="rfc" class="form-control" placeholder="R.F.C." autocomplete="off" formControlName="rfc">
+                                <div *ngIf="getFormControl('rfc', form)?.errors && getFormControl('rfc', form)?.touched">
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona moral de 12 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona fisica es de 13 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.getError('rfcAvailable') != null" class="text-danger">
+                                        El Rfc <strong>{{ form.get('rfc')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.getError('rfcInvalid') != null" class="text-danger">
+                                        El Rfc <strong>{{ form.get('rfc')?.value }}</strong> no tiene la estructura valida.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="web" class="col-form-label">
+                                    Dirección web
+                                </span>
+                                <input type="text" name="web" id="web" class="form-control" placeholder="https://www.google.com" autocomplete="off" formControlName="web">
+                            </div>
+                            <div class="col-ms-12 col-md-3 col-lg-2 form-group">
+                                <label class="col-form-label">
+                                    Estatus
+                                </label>
+                                <div class="form-check mx-2">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-ms-12 col-md-5 col-lg-4 form-group">
+                                <span>Categoria</span>
+                                <div class="input-group mb-3">
+                                    <ng-select 
+                                        formControlName="categoria_id"
+                                        [items]="list_categorias"
+                                        bindLabel="nombre"
+                                        bindValue="id"
+                                        style="width: 90%;"
+                                        placeholder="Seleccione una categoria">
+                                    </ng-select>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary btn-sm" type="button" id="button-addon2" (click)="addCategoria()">
+                                            <i class="fas fa-plus fa-sm fa-fw"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3 col-sm-12">
+                                <span for="comentarios" class="col-form-label">
+                                    Observaciones
+                                </span>
+                                <textarea name="comentarios" id="comentarios" rows="4" class="form-control" 
+                                    placeholder="Agregue acá sus comentarios" formControlName="comentarios">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-3">
+                    <div class="card-header">
+                        <strong>Contacto</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="contacto" class="col-form-label">Contacto</span>
+                                <input type="text" name="contacto" id="contacto" class="form-control" 
+                                    formControlName="contacto" placeholder="Nombre de contacto" autocomplete="off"/>
+                            </div>
+                            <!--Correo electrónico-->
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="correo" class="col-form-label">Correo</span>
+                                <input type="email" name="correo" id="correo" class="form-control"
+                                    formControlName="correo" autocomplete="off" placeholder="Correo electronico principal" autocomplete="off"/>
+                                <div *ngIf="getFormControl('correo', form)?.errors && getFormControl('correo', form)?.touched">
+                                    <small *ngIf="getFormControl('correo', form)?.hasError('email')" class="text-danger">
+                                        EL <strong>correo</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="correo_alternativo" class="col-form-label">Correo alternativo</span>
+                                <input type="email" class="form-control" formControlName="correo_alternativo" autocomplete="off" placeholder="Correo electronico alternativo"/>
+                                <div *ngIf="getFormControl('correo_alternativo', form)?.errors && getFormControl('correo_alternativo', form)?.touched">
+                                    <small *ngIf="getFormControl('correo_alternativo', form)?.hasError('email')" class="text-danger">
+                                        EL <strong>correo</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="telefono" class="col-form-label">Teléfono</span>
+                                <input type="text" class="form-control" formControlName="telefono" placeholder="Teléfono principal" autocomplete="off"/>
+                                <div *ngIf="getFormControl('telefono', form)?.errors && getFormControl('telefono', form)?.touched">
+                                    <small *ngIf="getFormControl('telefono', form)?.hasError('pattern')" class="text-danger">
+                                        EL <strong>telefono</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="telefono_alternativo" class="col-form-label">Teléfono alternativo</span>
+                                <input type="text" class="form-control" formControlName="telefono_alternativo" placeholder="Teléfono alternativo" autocomplete="off"/>
+                                <div *ngIf="getFormControl('telefono_alternativo', form)?.errors && getFormControl('telefono_alternativo', form)?.touched">
+                                    <small *ngIf="getFormControl('telefono_alternativo', form)?.hasError('pattern')" class="text-danger">
+                                        EL <strong>telefono</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="celular" class="col-form-label">Celular</span>
+                                <input type="text" class="form-control" formControlName="celular" placeholder="Número de celular" autocomplete="off"/>
+                                <div *ngIf="getFormControl('celular', form)?.errors && getFormControl('celular', form)?.touched">
+                                    <small *ngIf="getFormControl('celular', form)?.hasError('pattern')" class="text-danger">
+                                        EL <strong>numero de celular</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-3 col-sm-12">
+                                <span for="fax" class="col-form-label">Fax</span>
+                                <input type="text" name="fax" id="fax" class="form-control" formControlName="fax" 
+                                    placeholder="Fax" autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-3">
+                    <div class="card-header">
+                        <strong>Dirección</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span for="cp"><strong class="text-danger">*</strong> Código postal</span>
+                                <input 
+                                id="typeadead-template"
+                                type="text"
+                                class="form-control form-control-bold"
+                                formControlName="cp"
+                                [ngbTypeahead]="buscarCp"
+                                [resultFormatter]="resultFormatter"
+                                [inputFormatter]="inputFormatter"
+                                [resultTemplate]="rcp"
+                                (selectItem)="selectedCP($event.item)"
+                                #instance="ngbTypeahead"
+                                placeholder="Buscar CP"
+                                typeaheadOptionField="cp"/>
+                                <ng-template #rcp let-r="result" let-t="term">
+                                    <div class="media p-1">
+                                        <div class="media-body">
+                                            <span>
+                                                <strong class="text-primary">{{r.cp}}</strong>
+                                                {{r.asenta}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="searching">
+                                    <small class="form-text text-muted">Buscando...</small>
+                                </div>
+                                <div *ngIf="searchFailed">
+                                    <div class="invalid-feedback">Lo sentimos, no se han encontrado resultados.</div>
+                                </div>
+                                <div *ngIf="getFormControl('cp', form)?.errors && getFormControl('cp', form)?.touched">
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser de 5 digitos.
+                                    </small>
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser de 5 digitos.
+                                    </small>
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('pattern')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser ti por numerico.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-7 col-sm-12 col-lg-7">
+                                <span for="calle">Calle</span>
+                                <input type="text" class="form-control form-control-bold" formControlName="calle">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-3">
+                                <span for="num_ext">Num Ext</span>
+                                <input type="text" class="form-control form-control-bold" formControlName="num_ext">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-3">
+                                <span for="num_int">Num Int</span>
+                                <input type="text" class="form-control form-control-bold" formControlName="num_int">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="colonia">Colonia</span>
+                                <input type="text" class="form-control form-control-bold" formControlName="colonia">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="colonia">Referencia</span>
+                                <input type="text" class="form-control form-control-bold" formControlName="referencia">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="municipio">Municipio</span>
+                                <ng-select
+                                    [items]="list_municipios"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    formControlName="municipio_id">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="estado">Estado</span>
+                                <ng-select
+                                    [items]="list_estados"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    (change)="loadMunicipios($event)"
+                                    formControlName="estado_id">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="estado">País</span>
+                                <ng-select 
+                                    [items]="list_paises" 
+                                    bindLabel="descripcion" 
+                                    bindValue="id" 
+                                    placeholder="Seleccione una opción"
+                                    (change)="loadEstados($event)"
+                                    formControlName="pais_id">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-3">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="relaciones-tab" data-bs-toggle="tab" data-bs-target="#relaciones-tab-pane" type="button" role="tab" aria-controls="relaciones-tab-pane" aria-selected="true">
+                                    Relaciones
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="finanzas-tab" data-bs-toggle="tab" data-bs-target="#finanzas-tab-pane" type="button" role="tab" aria-controls="finanzas-tab-pane" aria-selected="false">
+                                    Finanzas
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!--<ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="relaciones-tab" data-toggle="tab" href="#relaciones" role="tab" aria-controls="relaciones" aria-selected="false">
+                                    Relaciones
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="finanzas-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
+                                    Finanzas
+                                </a>
+                            </li>
+                        </ul>-->
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="relaciones-tab-pane" role="tabpanel" aria-labelledby="relaciones-tab" tabindex="0">
+                            <!-- <div class="tab-pane fade show active" id="relaciones" role="tabpanel" aria-labelledby="relaciones-tab"> -->
+                                <div class="my-2">
+                                    <div class="mat-elevation-z8">
+                                        <table formArrayName="relaciones" class="mat-table cdk-table table-bordered table-sm" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:18%;">Contacto</th>
+                                                    <th style="width:18%;">Puesto de trabajo</th>
+                                                    <th style="width:18%;">Correo</th>
+                                                    <th style="width:18%;">Num. de telefóno</th>
+                                                    <th style="width:18%;">Rol</th>
+                                                    <th style="width:10%;">
+                                                        <button type="button" (click)="agregarRelacion()" class="btn btn-primary">
+                                                            Contacto
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let relacion of getFormArray('relaciones', form).controls;
+                                                    let i = index;" [formGroupName]="i">
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName="contacto" placeholder="Juan Pérez">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName="puesto" placeholder="Vendedor">
+                                                    </td>
+                                                    <td>
+                                                        <input type="email" class="form-control" formControlName="correo" placeholder="juan.perez@gmail.com">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName="telefono" placeholder="5555555500">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName="rol" placeholder="ROL">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" (click)="eliminaContacto(i)" class="btn btn-danger" aria-label="icon">
+                                                            <i class="fas fa-trash fa-sm fa-fw"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="finanzas-tab-pane" role="tabpanel" aria-labelledby="finanzas-tab" tabindex="0">
+                                <div class="my-2">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Datos generales
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Nombre legal
+                                                    <input type="text" name="nombre_legal" id="nombre_legal" class="form-control" formControlName="nombre_legal" autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    <strong class="text-danger">*</strong>
+                                                    Moneda principal
+                                                    <ng-select
+                                                        [items]="list_divisas"
+                                                        bindLabel="descripcion"
+                                                        bindValue="id"
+                                                        placeholder="Seleccione una opción"
+                                                        formControlName="divisa_id">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Limite de credito
+                                                    <input type="number" name="limite_credito" id="limite_credito" class="form-control" formControlName="limite_credito" autocomplete="off">
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Cuenta
+                                                    <input type="text" name="cuenta" id="cuenta" class="form-control" formControlName="cuenta" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            DATOS BANCARIOS
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Banco
+                                                    <ng-select
+                                                        [items]="list_bancos"
+                                                        bindLabel="nombre"
+                                                        bindValue="id"
+                                                        placeholder="Seleccione una opción"
+                                                        formControlName="banco_id"></ng-select>
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Forma de pago
+                                                    <ng-select 
+                                                        [items]="list_forma_pago"
+                                                        bindLabel="descripcion"
+                                                        bindValue="id"
+                                                        placeholder="Seleccione una opcion"
+                                                        formControlName="forma_pago_id">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Cuenta bancaria
+                                                    <input type="text" name="cuenta_bancaria" id="cuenta_bancaria" class="form-control" formControlName="cuenta_bancaria" autocomplete="off"/>
+                                                </div>
+                                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                                    Clabe interbancaria
+                                                    <input type="text" name="clabe_interbancaria" id="clabe_interbancaria" class="form-control" formControlName="clabe_interbancaria" autocomplete="off"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-lg fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                    <i class="fas fa-save fa-lg fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalCategoria let-modal>
+        <form class="modal-content" [formGroup]="formCategoria" novalidate (ngSubmit)="saveCategoria($event)">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="modal.close('Ok')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <span>Nombre categoria</span>
+                            <input type="text" formControlName="nombre" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.close('No')">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </ng-template>
+</section>

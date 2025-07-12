@@ -1,0 +1,219 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Cuentas empresa" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-3">
+            Estatus
+            <ng-select 
+            [(ngModel)]="filter.is_active"
+            style="width: 100%;"
+            [markFirst]="true">
+                <ng-option [value]="'T'">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-5">
+            <span>Empresa</span>
+            <ng-select
+                [items]="list_companys_index"
+                bindLabel="razon_social"
+                bindValue="id"
+                placeholder="Selccione una opción"
+                [(ngModel)]="filter.company_id">
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span>Banco</span>
+            <ng-select
+                [items]="list_banks_index"
+                bindLabel="nombre"
+                bindValue="id"
+                placeholder="Selccione una opción"
+                [(ngModel)]="filter.bank_id">
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span>Divisa</span>
+            <ng-select
+                [items]="list_divisas_index"
+                bindLabel="descripcion"
+                bindValue="id"
+                placeholder="Selccione una opción"
+                [(ngModel)]="filter.divisa_id">
+            </ng-select>
+        </div>
+        
+        <div class="col-sm-12 col-md-6 col-lg-8">
+            <span for="filtro_razon_social">Cuenta, clabe o tarjeta</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.cuenta_clave_tarjeta" placeholder="Número de cuenta, clabe o tarjeta" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button id="btnGroupABCUsers" type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Cuentas empresa
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridAccountsCompany
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalCE let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar | Cuentas empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12">
+                                <span for="razon_social"><strong class="text-danger">*</strong> Empresa</span>
+                                <ng-select
+                                    [items]="list_companys"
+                                    bindLabel="razon_social"
+                                    bindValue="id"
+                                    [disabled]="true"
+                                    [clearable]="false"
+                                    formControlName="company_id"
+                                    placeholder="Seleccione una opción">
+                                </ng-select>
+                                <div *ngIf="getFormControl('company_id', form)?.errors && getFormControl('company_id', form)?.touched">
+                                    <small *ngIf="getFormControl('company_id', form)?.hasError('required')" class="text-danger">
+                                        La <strong>empresa</strong> es requerida.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="bank_id"><strong class="text-danger">*</strong> Banco</span>
+                                <ng-select
+                                    [items]="list_banks"
+                                    bindLabel="nombre"
+                                    bindValue="id"
+                                    formControlName="bank_id"
+                                    placeholder="Seleccione una opción">
+                                </ng-select>
+                                <div *ngIf="getFormControl('bank_id', form)?.errors && getFormControl('bank_id', form)?.touched">
+                                    <small *ngIf="getFormControl('bank_id', form)?.hasError('required')" class="text-danger">
+                                        El <strong>banco</strong> es requerido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="divisa_id">Divisa</span>
+                                <ng-select
+                                    [items]="list_divisas"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    formControlName="divisa_id"
+                                    placeholder="Seleccione una opción">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <br>
+                        <hr style="margin-top: 0;margin-bottom: 5px;">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span>Cuenta</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="cuenta" placeholder="xx xxxx xxxx">
+                                <div *ngIf="getFormControl('cuenta', form)?.errors && getFormControl('cuenta', form)?.touched">
+                                    <small *ngIf="getFormControl('cuenta', form)?.getError('cuentaAvailable') != null" class="text-danger">
+                                        La cuenta <strong>{{ form.get('cuenta')?.value }}</strong> ya se ha dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span>Clabe</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="clabe" placeholder="xx xxxx xxxx xxxx xxxx">
+                                <div *ngIf="getFormControl('clabe', form)?.errors && getFormControl('clabe', form)?.touched">
+                                    <small *ngIf="getFormControl('clabe', form)?.getError('clabeAvailable') != null" class="text-danger">
+                                        La clabe <strong>{{ form.get('clabe')?.value }}</strong> ya se ha dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span>Tarjeta</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="tarjeta" placeholder="xxxx xxxx xxxx xxxx">
+                                <div *ngIf="getFormControl('nombre', form)?.errors && getFormControl('nombre', form)?.touched">
+                                    <small *ngIf="getFormControl('tarjeta', form)?.getError('tarjetaAvailable') != null" class="text-danger">
+                                        La tarjeta <strong>{{ form.get('tarjeta')?.value }}</strong> ya se ha dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group form-check my-4">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    
+</section>

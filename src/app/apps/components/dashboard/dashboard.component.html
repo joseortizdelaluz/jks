@@ -1,0 +1,302 @@
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-sm-12 col-lg-3">
+            <div class="card m-2">
+                <a class="card-body" href="/app/catalogos/empresas">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/company-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_companys }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Empresas</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-3">
+            <div class="card m-2">
+                <a class="card-body" href="/app/catalogos/clientes">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/cliente-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_customers }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Clientes</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-3">
+            <div class="card m-2">
+                <a class="card-body" href="/app/facturacion/documentos">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/factura-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_invoices }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">CFDI's</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-3">
+            <div class="card m-2">
+                <a class="card-body" href="/app/facturacion/cotizaciones">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/icons8-factura-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_cotizaciones }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Cotizaciones</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-3" *ngIf="user.is_superuser!">
+            <div class="card m-2">
+                <a class="card-body" href="/app/facturacion/documentos">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/staff-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_staffs }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Staff's</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!-- <pre>
+            {{ user | json }}
+        </pre> -->
+        <div class="col-md-4 col-sm-12 col-lg-3" *ngIf="user.is_superuser!">
+            <div class="card m-2">
+                <a class="card-body" href="/app/facturacion/documentos">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/free-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_frees }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Free</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-3" *ngIf="user.is_superuser!">
+            <div class="card m-2">
+                <a class="card-body" href="/app/facturacion/documentos">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img src="assets/image/home/premium-96.png" alt="" class="image-home" style="height:60px;">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><strong class="count text-primary">{{ dashboard.total_premium }}</strong></div>
+                                <div class="stat-heading"><strong class="text-dark">Premium</strong> </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-12 col-md-12" *ngIf="user.is_staff && !user.is_superuser && (this.dashboard.csds || []).length > 0">
+            <div class="card m-2">
+                <div class="card-header">
+                    <strong class="text-danger" style="font-size: 18px;">Certifcado de sello digital proximos a vencer</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;"></th>
+                                <th style="width: 20%;">Fecha</th>
+                                <th style="width: 30%;">Sucursal</th>
+                                <th style="width: 40%;">Empresa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let csd of this.dashboard.csds">
+                                <td>
+                                    <div class="py-3">
+                                        <i *ngIf="this.diff_days(csd.fecha_fin_csd)>=5" class="fa fa-circle text-warning" style="font-size:1.5rem;" aria-hidden="true"></i>
+                                        <i *ngIf="this.diff_days(csd.fecha_fin_csd)<5" class="fa fa-circle text-danger" style="font-size:1.5rem;" aria-hidden="true"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-danger">
+                                        <small class="text-info">
+                                            {{csd.fecha_inicio_csd}}
+                                        </small>
+                                        <small class="text-danger">
+                                            {{csd.fecha_fin_csd}}
+                                        </small>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{ csd.nombre | uppercase }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        {{ csd.razon_social | uppercase }}
+                                    </span>
+                                </td>
+
+                            </tr>
+                        <!--
+                            <tr *ngFor="let csd of csds">
+                            </tr>
+                        -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6" *ngIf="(dashboard.last_five_documents_sign || []).length > 0">
+            <div class="card m-2">
+                <div class="card-header">
+                    <strong class="text-success">Ultimos folios fiscales emitidos</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong class="text-secondary">Folio fiscal</strong>
+                                </th>
+                                <th>
+                                    <strong class="text-secondary">Importe</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of dashboard.last_five_documents_sign">
+                                <td>
+                                    <span class="text-success">
+                                        <strong>( {{item.tipo_comprobante}} ) - {{ item.folio_fiscal }}</strong>
+                                        <div>
+                                            <small>
+                                                {{ item.fecha_certificacion | date:'medium' }}
+                                            </small>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <strong class="text-secondary">
+                                        {{ item.total | currency }}
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6" *ngIf="(dashboard.last_five_documents_cancel || []).length > 0">
+            <div class="card m-2">
+                <div class="card-header">
+                    <strong class="text-danger">Ultimos folios fiscales cancelados</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong class="text-secondary">Folio fiscal</strong>
+                                </th>
+                                <th>
+                                    <strong class="text-secondary">Importe</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of dashboard.last_five_documents_cancel">
+                                <td>
+                                    <span class="text-danger">
+                                        <strong>( {{item.tipo_comprobante}} ) - {{ item.folio_fiscal }}</strong>
+                                        <div>
+                                            <small>
+                                                {{ item.fecha_certificacion | date:'medium' }}
+                                            </small>
+                                        </div>
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <strong class="text-secondary">
+                                        {{ item.total | currency }}
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="user.is_staff&&!user.is_superuser">
+        <div class="col-lg-12 col-md-12">
+            <div class="card m-2">
+                <div class="card-header">
+                    <strong class="text-danger">CFDI's sellados y cancelados por mes</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <span>Ejercicio</span>
+                            <ng-select
+                                [items]="years"
+                                bindLabel="year"
+                                bindValue="year"
+                                placeholder="Seleccione"
+                                [(ngModel)]="year"
+                                (change)="loadDataYear($event)"
+                            ></ng-select>
+                        </div>
+                    </div>
+                    <canvas baseChart
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [plugins]="barChartPlugins"
+                        [legend]="barChartLegend"
+                        [type]="'bar'">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

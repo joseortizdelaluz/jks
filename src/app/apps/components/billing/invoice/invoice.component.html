@@ -1,0 +1,2288 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Documentos CFDI's" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-md-4 col-sm-12 col-lg-4">
+            <span>Empresa</span>
+            <ng-select [items]="list_root_emisor" bindLabel="razon_social" bindValue="id"
+                (change)="selectedCompanyRoot($event)" [(ngModel)]="filter.company_id"
+                placeholder="Seleccione una opción">
+            </ng-select>
+        </div>
+
+        <div class="col-md-4 col-sm-12 col-lg-4">
+            <span>Cliente</span>
+            <ng-select [items]="list_root_receptor" bindLabel="razon_social" bindValue="id"
+                [(ngModel)]="filter.customer_id" placeholder="Seleccione una opción">
+            </ng-select>
+        </div>
+
+        <div class="col-md-2 col-sm-12 col-lg-2">
+            <span>Importadas</span>
+            <ng-select placeholder="Seleccione una opción" [(ngModel)]="filter.importadas">
+                <ng-option [value]="false">No</ng-option>
+                <ng-option [value]="true">Si</ng-option>
+            </ng-select>
+        </div>
+
+        <div class="col-md-2 col-sm-12 col-lg-2">
+            <span>T. Comprobante</span>
+            <ng-select [items]="list_root_tipo_comprobante" bindLabel="label" bindValue="value"
+                placeholder="Seleccione una opción" [(ngModel)]="filter.tipo_comprobante">
+            </ng-select>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <span>Sucursal</span>
+            <ng-select [items]="list_root_sucursal" bindLabel="nombre" bindValue="id"
+                [(ngModel)]="filter.branch_company_id" placeholder="Seleccione">
+            </ng-select>
+        </div>
+
+        <div class="col-md-3 col-sm-12 col-lg-3">
+            <span>Status CFDI</span>
+            <ng-select [items]="list_root_status_cfdi" bindLabel="label" bindValue="value"
+                placeholder="Seleccione una opción" [(ngModel)]="filter.status_cfdi">
+            </ng-select>
+        </div>
+
+        <div class="col-md-3 col-sm-12 col-lg-3">
+            <span>Tipo Fecha</span>
+            <ng-select [items]="list_root_type_date" bindLabel="label" bindValue="value"
+                placeholder="Seleccione una opción" [(ngModel)]="filter.tipo_fecha">
+            </ng-select>
+        </div>
+
+        <div class="col-md-3 col-sm-12 col-lg-3">
+            <span>Fecha inicio</span>
+            <input type="date" class="form-control" [(ngModel)]="filter.fecha_inicio">
+        </div>
+
+        <div class="col-md-3 col-sm-12 col-lg-3">
+            <span>Fecha fin</span>
+            <input type="date" class="form-control" [(ngModel)]="filter.fecha_fin">
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-9">
+            <span for="filtro_razon_social">Folio</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.folio" placeholder="Folio; P/e:152,262,100"
+                    aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group">
+                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Documentos
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openCreate()"
+                            style="text-align: start;">
+                            <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                            Agregar
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openEdit()"
+                            style="text-align: start;">
+                            <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                            Editar
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openView()"
+                            style="text-align: start;">
+                            <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                            Visualizar
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openDelete()"
+                            style="text-align: start;">
+                            <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                            Eliminar
+                        </button>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="this.openImportadorXMLS()"
+                            style="text-align: start;">
+                            <i class="fas fa-file-import fa-lg fa-fw text-primary"></i>
+                            Importar XML's
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger"
+                            (click)="this.openImportadorXLSX(this.jqxGridFacturasImportar)" style="text-align: start;">
+                            <i class="fas fa-file-import fa-lg fa-fw text-primary"></i>
+                            Importar XLSX
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="this.openReFoliar()"
+                            style="text-align: start;">
+                            <i class="fa fa-refresh text-primary"></i>
+                            Re foliar
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            &nbsp;
+            <div class="btn-group" role="group">
+                <button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Timbrado
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupTIMBRADO">
+                    <li>
+                        <button class="dropdown-item btn btn-danger" (click)="openSignDocument()"
+                            style="text-align: start;">
+                            <i class="fas fa-certificate fa-lg fa-fw text-warning"></i>
+                            Sellar
+
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item btn btn-danger" (click)="abreCancelador()"
+                            style="text-align: start;">
+                            <i class="fas fa-ban fa-lg fa-fw text-danger"></i>
+                            Cancelar
+                        </button>
+                    </li>
+                </div>
+            </div>
+            &nbsp;
+            <div class="btn-group" role="group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Descargar
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupTIMBRADO" x-placement="bottom-start"
+                    style="position: absolute; transform: translate3d(0px, 31px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openTemplates()"
+                            style="text-align: start;">
+                            <i class="fas fa-file-pdf fa-lg fa-fw text-danger"></i>
+                            Pdf
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="openTemplates('xml')"
+                            style="text-align: start;">
+                            <i class="fas fa-file-archive fa-lg fa-fw text-primary"></i>
+                            Pdf &amp; Xml
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="report()"
+                            style="text-align: start;">
+                            <i class="fas fa-file-excel fa-lg fa-fw text-success"></i>
+                            Excel
+                        </button>
+                    </li>
+                </div>
+            </div>
+            &nbsp;
+            <div class="btn-group" role="group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Otros
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupOTROS">
+                    <li>
+                        <button type="button" class="dropdown-item btn btn-danger" (click)="this.openSendEmail()"
+                            style="text-align: start;">
+                            <i class="fas fa-envelope fa-lg fa-fw text-warning"></i>
+                            Email
+                        </button>
+                    </li>
+                    <!-- <button type="button" class="dropdown-item btn btn-danger" ng-click="this.openCXC()" style="text-align: start;">
+                        <i class="fa fa-money text-success" aria-hidden="true"></i>
+                        Cxc
+                    </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridDocumentos (onRowselect)="seleccionarRegistro($event)" [width]="'100%'"
+                [source]="dataAdapter" [columns]="columns" [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <!-- Modal crea editar documento -->
+
+    <ng-template #modalCE let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear - Editar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 col-lg-6">
+                                <span><strong class="text-danger">*</strong> Emisor</span>
+                                <ng-select [items]="list_ce_companys" bindLabel="razon_social" bindValue="id"
+                                    placeholder="Selccione una opción" (change)="selectedCompanyCE($event)"
+                                    formControlName="company_id">
+                                </ng-select>
+
+                                <div
+                                    *ngIf="getFormControl('company_id', form)?.errors && getFormControl('company_id', form)?.touched">
+                                    <small *ngIf="getFormControl('company_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione una <strong>receptor</strong>.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12 col-lg-3">
+                                <span><strong class="text-danger">*</strong> Sucursal</span>
+                                <ng-select [items]="list_ce_branchs" bindLabel="nombre" bindValue="id"
+                                    placeholder="Selccione una opción" formControlName="branch_company_id">
+                                </ng-select>
+                                <div
+                                    *ngIf="getFormControl('branch_company_id', form)?.errors && getFormControl('branch_company_id', form)?.touched">
+                                    <small *ngIf="getFormControl('branch_company_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione una <strong>sucursal</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-lg-2">
+                                <span><strong class="text-danger">*</strong> T. comprobante</span>
+                                <ng-select placeholder="Seleccione una opción" formControlName="tipo_comprobante"
+                                    (change)="changeTypeDocument($event)">
+                                    <ng-option *ngFor="let type of list_ce_tipo_comprobante"
+                                        [value]="type.value"><strong>{{type.value}}</strong> - {{ type.label
+                                        }}</ng-option>
+                                </ng-select>
+                                <div
+                                    *ngIf="getFormControl('tipo_comprobante', form)?.errors && getFormControl('tipo_comprobante', form)?.touched">
+                                    <small *ngIf="getFormControl('tipo_comprobante', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione el <strong>tipo de comprobante</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-12 col-lg-1">
+                                <span># Dec.</span>
+                                <select formControlName="decimales" class="form-select" (change)="setDecimal($event)">
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span><strong class="text-danger">*</strong> Receptor</span>
+                                <ng-select [items]="list_ce_customers" bindLabel="razon_social" bindValue="id"
+                                    placeholder="Selccione una opción" (change)="selectedCustomerCE($event)"
+                                    formControlName="client_id">
+                                </ng-select>
+                                <div
+                                    *ngIf="getFormControl('client_id', form)?.errors && getFormControl('client_id', form)?.touched">
+                                    <small *ngIf="getFormControl('client_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione el <strong>cliente</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span><strong class="text-danger">*</strong> Uso CFDI</span>
+                                <ng-select placeholder="Selccione una opción" formControlName="uso_cfdi_id"
+                                    [readonly]="form.get('tipo_comprobante')?.value=='P'">
+                                    <ng-option *ngFor="let item of list_ce_usos_cfdi" [value]="item.id"><strong>{{
+                                            item.clave }}</strong> - {{ item.descripcion }}</ng-option>
+                                </ng-select>
+                                <div
+                                    *ngIf="getFormControl('uso_cfdi_id', form)?.errors && getFormControl('uso_cfdi_id', form)?.touched">
+                                    <small *ngIf="getFormControl('uso_cfdi_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione el <strong>uso de CFDI</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12 col-lg-3">
+                                <span><strong class="text-danger">*</strong> Divisa</span>
+                                <ng-select placeholder="Seleccione una opción" formControlName="divisa_id"
+                                    [readonly]="form.get('tipo_comprobante')?.value=='P'">
+                                    <ng-option *ngFor="let item of list_ce_divisas" [value]="item.id"><strong>{{
+                                            item.clave }}</strong> - {{ item.descripcion }}</ng-option>
+                                </ng-select>
+                                <div
+                                    *ngIf="getFormControl('divisa_id', form)?.errors && getFormControl('divisa_id', form)?.touched">
+                                    <small *ngIf="getFormControl('divisa_id', form)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione la <strong>divisa</strong> de pago.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-12 col-lg-2">
+                                <span>Tipo de cambio</span>
+                                <input type="number" class="form-control" placeholder="1.00"
+                                    formControlName="tipo_cambio">
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-lg-4">
+                                <span>
+                                    <strong class="text-danger"
+                                        *ngIf="getFormControl('metodo_pago_id', form)?.hasError('required')">*</strong>
+                                    Metodo de pago
+                                </span>
+                                <ng-select placeholder="Seleccione una opción" formControlName="metodo_pago_id"
+                                    [readonly]="form.get('tipo_comprobante')?.value=='P'">
+                                    <ng-option *ngFor="let item of list_ce_metodo_pago" [value]="item.id">
+                                        <strong>{{ item.clave }}</strong> - {{ item.descripcion }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12 col-lg-3">
+                                <span>
+                                    <strong class="text-danger"
+                                        *ngIf="getFormControl('forma_pago_id', form)?.hasError('required')">*</strong><!---->
+                                    Forma de pago
+                                </span>
+                                <ng-select placeholder="Seleccione una opción" formControlName="forma_pago_id"
+                                    [readonly]="form.get('tipo_comprobante')?.value=='P'">
+                                    <ng-option *ngFor="let item of list_ce_forma_pago" [value]="item.id"><strong>{{
+                                            item.clave }}</strong> - {{ item.descripcion }}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12 col-lg-3">
+                                <span><strong class="text-danger">*</strong> Exportación</span>
+                                <ng-select placeholder="Seleccione una opción" formControlName="exportacion">
+                                    <ng-option *ngFor="let item of list_ce_exportacion" [value]="item.value"><strong>{{
+                                            item.value }}</strong> - {{ item.label }}</ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12 col-lg-4">
+                                <span>Condiciones de pago</span>
+                                <input type="text" class="form-control" formControlName="condiciones_pago"
+                                    placeholder="Condiciones de pago">
+                            </div>
+
+                            <div class="col-md-3 col-sm-12 col-lg-3">
+                                <span>Serie</span>
+                                <input type="text" class="form-control" formControlName="serie" placeholder="FACT">
+                            </div>
+                        </div><!--Div row-->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Documentos relacionados</strong>
+                                <table formArrayName="relacionados" class="table table-sm table-striped table-bordered">
+                                    <thead class="bg-secondary thead-secondary"
+                                        style="color: rgb(255, 255, 255); --darkreader-inline-color: #e8e6e3;"
+                                        data-darkreader-inline-color="">
+                                        <tr>
+                                            <th style="width:45%;">
+                                                Tipo relacion
+                                            </th>
+                                            <th style="width:45%;">
+                                                Folio fiscal
+                                            </th>
+                                            <th style="width:10%;text-align: right;">
+                                                <button type="button" class="btn btn-primary"
+                                                    (click)="addNewRowRelatedDocument()">
+                                                    <i class="fas fa-plus fa-xs fa-fw"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let related of getFormArray('relacionados', form).controls; let i = index;"
+                                            [formGroupName]="i">
+                                            <td>
+                                                <ng-select formControlName="tipo_relacion" placeholder="Seleccione una opción">
+                                                    <ng-option value="01">
+                                                        <strong>01</strong>
+                                                        -Nota de crédito de los documentos relacionados
+                                                    </ng-option>
+                                                    <ng-option value="02">
+                                                        <strong>02</strong>
+                                                        -Nota de débito de los documentos relacionados
+                                                    </ng-option>
+                                                    <ng-option value="03">
+                                                        <strong>03</strong>
+                                                        -Devolución de mercancía sobre facturas o traslados previos
+                                                    </ng-option>
+                                                    <ng-option value="04">
+                                                        <strong>04</strong>
+                                                        -Sustitución de los CFDI previos
+                                                    </ng-option>
+                                                    <ng-option value="05">
+                                                        <strong>05</strong>
+                                                        -Traslados de mercancías facturados previamente
+                                                    </ng-option>
+                                                    <ng-option value="06">
+                                                        <strong>06</strong>
+                                                        -Factura generada por los traslados previos
+                                                    </ng-option>
+                                                    <ng-option value="07">
+                                                        <strong>07</strong>
+                                                        -CFDI por aplicación de anticipo
+                                                    </ng-option>
+                                                </ng-select>
+                                                <div *ngIf="getFormControl('tipo_relacion', related)?.errors && getFormControl('tipo_relacion', related)?.touched">
+                                                    <small class="text-danger"
+                                                        *ngIf="getFormControl('tipo_relacion', related)?.hasError('required')">
+                                                        El <strong>tipo relación</strong> es requerido.
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" formControlName="folio_fiscal" class="form-control"
+                                                    placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
+                                                <div
+                                                    *ngIf="getFormControl('folio_fiscal', related)?.errors && getFormControl('folio_fiscal', related)?.touched">
+                                                    <small class="text-danger"
+                                                        *ngIf="getFormControl('folio_fiscal', related)?.hasError('required')">
+                                                        El <strong>folio fiscal</strong> es requerido.
+                                                    </small>
+                                                    <small class="text-danger"
+                                                        *ngIf="getFormControl('folio_fiscal', related)?.hasError('minLength')">
+                                                        La longitud de un folio fiscal es de 36 posiciones
+                                                        alfanumericas.
+                                                    </small>
+                                                    <small class="text-danger"
+                                                        *ngIf="getFormControl('folio_fiscal', related)?.hasError('maxLength')">
+                                                        La longitud de un folio fiscal es de 36 posiciones
+                                                        alfanumericas.
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                <button type="button" class="btn btn-danger"
+                                                    (click)="deleteRowRelatedDocument(i)">
+                                                    <i class="fas fa-trash fa-sm fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!-- Div Row-->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Desglose</strong>
+                                <table formArrayName="detalles" class="table table-striped table-sm table-bordered">
+                                    <thead class="bg-secondary thead-secondary"
+                                        style="color: rgb(255, 255, 255); --darkreader-inline-color: #e8e6e3;"
+                                        data-darkreader-inline-color="">
+                                        <tr>
+                                            <th style="width: 30%;">Descripción</th>
+                                            <th style="width: 10%;">P. Unitario</th>
+                                            <th style="width: 10%;">Cantidad</th>
+                                            <th style="width: 10%;">Descuento</th>
+                                            <th style="width: 10%;">Subtotal</th>
+                                            <th style="width: 10%;">Impuestos</th>
+                                            <th style="width: 10%;">Total</th>
+                                            <th style="width: 8%;text-align: right;">
+                                                <button type="button" class="btn btn-primary"
+                                                    (click)="openCreateEditDetail(modalDetalle)"
+                                                    [disabled]="form.get('tipo_comprobante')?.value=='P'">
+                                                    <i class="fas fa-plus fa-xs fa-fw"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let detalle of getFormArray('detalles', form).controls; let i = index;"
+                                            [formGroupName]="i">
+                                            <td>
+                                                <input type="text" class="form-control" formControlName="concepto"
+                                                    [readOnly]="form.get('tipo_comprobante')?.value=='P'"
+                                                    [ngbTypeahead]="searchProduct" [resultFormatter]="resultFormatter"
+                                                    [inputFormatter]="inputFormatter" [resultTemplate]="rcp"
+                                                    (selectItem)="selectedProduct($event.item, i)"
+                                                    #instance="ngbTypeahead" placeholder="000001"
+                                                    typeaheadOptionField="rcp" />
+                                                <ng-template #rcp let-r="result" let-t="term">
+                                                    <div class="media p-1">
+                                                        <div class="media-body">
+                                                            <span>
+                                                                <strong class="text-primary">{{r.clave}}</strong>
+                                                                {{r.nombre}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                <div *ngIf="searching">
+                                                    <small class="form-text text-muted">Buscando...</small>
+                                                </div>
+                                                <div *ngIf="searchFailed">
+                                                    <div class="invalid-feedback">Sin resultados.</div>
+                                                </div>
+
+                                                <div
+                                                    *ngIf="getFormControl('concepto', detalle)?.errors && getFormControl('concepto', detalle)?.touched">
+                                                    <small class="text-danger"
+                                                        *ngIf="getFormControl('concepto', detalle)?.hasError('required')">
+                                                        El <strong>concepto</strong> es requerido.
+                                                    </small>
+                                                </div>
+                                            </td>
+
+
+
+                                            <!--<td>
+                                                <input type="text" formControlName="concepto"
+                                                    [readOnly]="form.get('tipo_comprobante')?.value=='P'"
+                                                    class="form-control">
+                                            </td>-->
+                                            <td>
+                                                <input type="number"
+                                                    [readOnly]="form.get('tipo_comprobante')?.value=='P'"
+                                                    formControlName="precio_unitario" class="form-control"
+                                                    (change)="changeDesglose()">
+                                            </td>
+                                            <td>
+                                                <input type="number"
+                                                    [readOnly]="form.get('tipo_comprobante')?.value=='P'"
+                                                    formControlName="cantidad" class="form-control"
+                                                    (change)="changeDesglose()">
+                                            </td>
+                                            <td>
+                                                <input type="number"
+                                                    [readOnly]="form.get('tipo_comprobante')?.value=='P'"
+                                                    formControlName="descuento" class="form-control"
+                                                    (change)="changeDesglose()">
+                                            </td>
+                                            <td>
+                                                <span class="form-control" style="font-size: 12px;font-weight: bold;">
+                                                    {{ detalle.value['subtotal'] }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div *ngFor="let impuesto of detalle.value['impuestos']"
+                                                    style="font-size: 12px;">
+                                                    <strong>({{ impuesto['tipo'].trim().toLowerCase() == 'traslado' ?
+                                                        '+' : '-' }})</strong>
+                                                    {{ impuesto['nombre'] }} =
+                                                    {{ impuesto['total'] }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="form-control" style="font-size: 12px;font-weight: bold;">
+                                                    {{ detalle.value['total'] }}
+                                                </span>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                <div *ngIf="form.get('tipo_comprobante')?.value!='P'">
+                                                    <button type="button" class="btn btn-warning btn-sm"
+                                                        (click)="openCreateEditDetail(modalDetalle, i)">
+                                                        <i class="fas fa-pencil-alt fa-sm fa-fw"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        (click)="deleteDetail(i)">
+                                                        <i class="fas fa-trash-alt fa-sm fa-fw"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    
+                                    <tfoot *ngIf="form.get('tipo_comprobante')?.value!='P'">
+                                        <tr>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm" (click)="this.addRowDetail()">
+                                                    Agregar entrada
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div><!--Div Row-->
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <strong>
+                                    Complamentos
+                                </strong>
+                                <table class="table table-sm table-striped">
+                                    <tbody *ngIf="form.get('tipo_comprobante')?.value=='I'">
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check-square fa-sm fa-fw"
+                                                    *ngIf="checkExitComplement('implocal')"></i>
+                                                <i class="fas fa-square fa-sm fa-fw"
+                                                    *ngIf="!checkExitComplement('implocal')"></i>
+                                            </td>
+                                            <td>
+                                                Impuestos locales <strong>1.0</strong>.
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    (click)="settingComplementImplocal()">
+                                                    <i class="fas fa-cogs fa-xs fa-fw"></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    (click)="deleteComplement('implocal', 'Impuestos locales')"
+                                                    *ngIf="checkExitComplement('implocal')">
+                                                    <i class="fas fa-trash fa-xs fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check-square fa-sm fa-fw"
+                                                    *ngIf="checkExitComplement('cporte')"></i>
+                                                <i class="fas fa-square fa-sm fa-fw"
+                                                    *ngIf="!checkExitComplement('cporte')"></i>
+                                            </td>
+                                            <td>
+                                                Carta porte <strong>2.0</strong>.
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <button type="button" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-cogs fa-xs fa-fw"></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    *ngIf="checkExitComplement('cporte')">
+                                                    <i class="fas fa-trash fa-xs fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check-square fa-sm fa-fw"
+                                                    *ngIf="checkExitComplement('pconstruccion')"></i>
+                                                <i class="fas fa-square fa-sm fa-fw"
+                                                    *ngIf="!checkExitComplement('pconstruccion')"></i>
+                                            </td>
+                                            <td>
+                                                Parciales construcción <strong>2.0</strong>.
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <button type="button" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-cogs fa-xs fa-fw"></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    *ngIf="checkExitComplement('pconstruccion')">
+                                                    <i class="fas fa-trash fa-xs fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tbody *ngIf="form.get('tipo_comprobante')?.value=='P'">
+                                        <tr>
+                                            <td>
+                                                <i class="fas fa-check-square fa-sm fa-fw"
+                                                    *ngIf="checkExitComplement('pays')"></i>
+                                                <i class="fas fa-square fa-sm fa-fw"
+                                                    *ngIf="!checkExitComplement('pays')"></i>
+                                            </td>
+                                            <td>
+                                                Complamento de pago <strong>(2.0)</strong>.
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    (click)="openSettingComplementPay()">
+                                                    <i class="fas fa-cogs fa-xs fa-fw"></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    *ngIf="checkExitComplement('pays')">
+                                                    <i class="fas fa-trash fa-xs fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align:right;">
+                                                <strong>
+                                                    Subtotal (+):
+                                                </strong>
+                                            </td>
+                                            <td style="text-align:right;" [style]="'width:40%'">
+                                                {{ form.get('subtotal')?.value | currency }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;">
+                                                <strong>
+                                                    Descuento (-):
+                                                </strong>
+                                            </td>
+                                            <td style="text-align:right;" [style]="'width:40%'">
+                                                {{ form.get('descuento')?.value | currency }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;">
+                                                <strong>
+                                                    T. Federal (+):
+                                                </strong>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                {{ form.get('traslados')?.value  }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;">
+                                                <strong>
+                                                    R. Federal (-):
+                                                </strong>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                {{ form.get('retencion')?.value }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;"><strong>T. Local (+):</strong></td>
+                                            <td style="text-align:right;">
+                                                {{ form.get('traslados_local')?.value }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;"><strong>R. Local (-):</strong></td>
+                                            <td style="text-align:right;">
+                                                {{ form.get('retencion_local')?.value }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:right;"><strong>Total (=):</strong></td>
+                                            <td style="text-align:right;">
+                                                {{ form.get('total')?.value }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-6">
+
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="row">
+                            <div class="col-12">
+                                <pre>
+                                    {{ form?.getRawValue() | json }}
+                                </pre>
+                            </div>
+                        </div> -->
+
+                    </div><!--Div Container Fluid-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                        (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <ng-template #modalDetalle let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Desglose</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="formDetail" novalidate (ngSubmit)="saveDetail($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <span><strong class="text-danger">*</strong> Descripción</span>
+                                <textarea rows="3" class="form-control" formControlName="concepto"
+                                    placeholder="Concepto de facturación"></textarea>
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-4">
+                                <span><strong class="text-danger">*</strong> Cantidad</span>
+                                <input type="number" class="form-control" formControlName="cantidad" placeholder="1"
+                                    (change)="recalculaGeneralesDesglose()">
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-4">
+                                <span><strong class="text-danger">*</strong> Precio unitario</span>
+                                <input type="number" class="form-control" formControlName="precio_unitario"
+                                    placeholder="100.00" (change)="recalculaGeneralesDesglose()">
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-4">
+                                <span>Descuento</span>
+                                <input type="number" class="form-control" formControlName="descuento" placeholder="0.00"
+                                    (change)="recalculaGeneralesDesglose()">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <span>Producto servicio</span>
+                                <input id="typeadead-template" type="text" class="form-control"
+                                    formControlName="producto_servicio" [ngbTypeahead]="searchProductoServicio"
+                                    [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                    [inputFormatter]="inputFormatterProductoServicioClaveUnidad" [resultTemplate]="rps"
+                                    (selectItem)="selectedProductoServicio($event.item)" #instance="ngbTypeahead"
+                                    placeholder="01010101 - No existe en el catálogo">
+                                <ng-template #rps let-r="result" let-t="term">
+                                    <div class="media p-1">
+                                        <div class="media-body">
+                                            <span>
+                                                <strong class="text-primary">{{r.clave}}</strong>
+                                                {{r.descripcion}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="searchingPS">
+                                    <small class="form-text text-muted">Buscando...</small>
+                                </div>
+                                <div *ngIf="searchFailedPS">
+                                    <div class="invalid-feedback">Sin resultados.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <span>Unidad de medida</span>
+                                <input id="typeadead-template" type="text" class="form-control"
+                                    formControlName="unidad_medida" [ngbTypeahead]="searchUnidadMedida"
+                                    [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                    [inputFormatter]="inputFormatterProductoServicioClaveUnidad" [resultTemplate]="rum"
+                                    (selectItem)="selectedUnidadMedida($event.item)" #instance="ngbTypeahead"
+                                    placeholder="E48 - Unidad de servicio">
+                                <ng-template #rum let-r="result" let-t="term">
+                                    <div class="media p-1">
+                                        <div class="media-body">
+                                            <span>
+                                                <strong class="text-primary">{{r.clave}}</strong>
+                                                {{r.descripcion}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="searchingUM">
+                                    <small class="form-text text-muted">Buscando...</small>
+                                </div>
+                                <div *ngIf="searchFailedUM">
+                                    <div class="invalid-feedback">Sin resultados.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4 col-lg-4">
+                                <span for="cantidad">SubTotal</span>
+                                <input type="number" class="form-control" formControlName="subtotal" placeholder="0.00"
+                                    readonly>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span><strong class="text-danger">*</strong> Impuestos</span>
+
+                                <!-- <ng-select #ngSelectComponent (change)="this.selectedTax($event)">
+                                    <ng-option *ngFor="let tax of this.list_ce_detalle_impuestos" [value]="tax.tax_id">
+                                        <div>{{ tax. nombre }}</div>
+                                        <small style="text-transform: capitalize;font-weight: bolder;">{{ tax.tipo }}</small>
+                                    </ng-option>
+                                </ng-select> -->
+
+                                <ng-select #ngSelectComponent [items]="list_ce_detalle_impuestos" bindLabel="nombre"
+                                    bindValue="tax_id" placeholder="Selccione una opción" (change)="this.selectedTax($event)">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-sm table-striped" formArrayName="impuestos">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Impuesto
+                                            </th>
+                                            <th>
+                                                Tasa Cuota
+                                            </th>
+                                            <th>
+                                                Tipo
+                                            </th>
+                                            <th>
+                                                Base
+                                            </th>
+                                            <th>
+                                                Tasa
+                                            </th>
+                                            <th>
+                                                Total
+                                            </th>
+                                            <th style="width: 30px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let impuesto of getFormArray('impuestos', formDetail).controls; 
+                                                    let i = index;" [formGroupName]="i">
+                                            <td>
+                                                {{ impuesto.value['nombre'] }}
+                                            </td>
+                                            <td>
+                                                {{ impuesto.value['tasa_cuota'] }}
+                                            </td>
+                                            <td>
+                                                {{ impuesto.value['tipo'] }}
+                                            </td>
+                                            <td>
+                                                {{ impuesto.value['base'] }}
+                                            </td>
+                                            <td>
+                                                {{ impuesto.value['valor'] }}
+                                            </td>
+                                            <td>
+                                                {{ impuesto.value['total'] }}
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    (click)="removeTax(i)">
+                                                    <i class="fas fa-trash-alt fa-sm fa-fw"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-8 col-lg-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" formControlName="objeto_impuesto"
+                                        [value]="'01'">
+                                    <label class="form-check-label" for="noObjetoDeImpuesto">
+                                        No objeto de impuesto
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" formControlName="objeto_impuesto"
+                                        [value]="'02'">
+                                    <label class="form-check-label" for="siObjetoDeImpuesto">
+                                        Sí objeto de impuesto
+                                    </label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" formControlName="objeto_impuesto"
+                                        [value]="'03'">
+                                    <label class="form-check-label" for="siObjetoDeImpuestoNoObligadoDesglose">
+                                        Sí objeto del impuesto y no obligado al desglose
+                                    </label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" formControlName="objeto_impuesto"
+                                        [value]="'04'">
+                                    <label class="form-check-label" for="siObjetoDeImpuestoNoCausaImpuesto">
+                                        Sí objeto del impuesto y no causa impuesto.
+                                    </label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" formControlName="objeto_impuesto"
+                                        [value]="'05'">
+                                    <label class="form-check-label" for="siObjetoDeImpuestoIvaCredPODEBI">
+                                        Sí objeto del impuesto, IVA crédito PODEBI.
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-4 col-lg-4">
+                                <span>Total</span>
+                                <input type="number" class="form-control" formControlName="total" readonly>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-12">
+                                <pre>
+                                    {{ formDetail?.getRawValue() | json }}
+                                </pre>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"
+                        (click)="modal.close(false)">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Agregar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <ng-template #modalSignDocument let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ sellador.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container" *ngIf="sellador.visible==0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            Fecha emisión:
+                            <input type="datetime-local" [value]="sellador.fecha_emision | date : 'yyyy-MM-ddTHH:mm'"
+                                class="form-control" [(ngModel)]="sellador.fecha_emision">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" *ngIf="sellador.visible==1">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Enviando {{ sellador.current }} / {{ sellador.total }}</h4>
+                            <hr>
+                            <h5 class="text-danger">Errores: {{ sellador.errores }}</h5>
+                            <hr>
+                            <h5 class="text-success">Exito: {{ sellador.exito }}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ngb-progressbar class="mb-3" type="success" [value]="sellador.porcentaje" [striped]="true"
+                                [animated]="true" [max]="100">
+                                <i>{{ sellador.porcentaje }} %</i>
+                            </ngb-progressbar>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" *ngIf="sellador.visible==2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Folio/Serie</th>
+                                        <th>
+                                            Error
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let error of sellador.erroresDesc">
+                                        <td><strong>{{ error.folio }}/ {{ error.serie }}</strong></td>
+                                        <td>
+                                            {{ error.error }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="container" *ngIf="sellador.visible==0">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: right;">
+                            <button type="button" class="btn btn-primary btn-sm" (click)="signInvoice()">
+                                Sellar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" *ngIf="sellador.visible==2">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: right;">
+                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                                (click)="modal.close('No')">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalTemplates let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Plantillas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+
+            <form [formGroup]="formTemplate" novalidate (ngSubmit)="generatePdfOrXml($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <span>Plantilla</span>
+                                <ng-select [items]="list_templates_generate" bindLabel="name" bindValue="id"
+                                    placeholder="Seleccione una plantilla" formControlName="template"></ng-select>
+                                <div
+                                    *ngIf="getFormControl('template', formTemplate)?.errors && getFormControl('template', formTemplate)?.touched">
+                                    <small *ngIf="getFormControl('template', formTemplate)?.hasError('required')"
+                                        class="text-danger">
+                                        Seleccione una <strong>plantilla</strong>.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                        (click)="modal.close('No')">
+                        <i class="fas fa-times fa-sm fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-check fa-sm fa-fw"></i>
+                        Aceptar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    <!--Complemento de impuestos locales-->
+    <ng-template #modalComplementImplocal let-modal>
+        <form [formGroup]="formImplocal" novalidate (ngSubmit)="saveImplocal($event)" div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Impuestos locales <strong>(Implocal 1.0)</strong>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <span>Impuestos locales</span>
+                            <ng-select [items]="list_local_tax" bindLabel="nombre" bindValue="tax_id"
+                                placeholder="Seleccione" (change)="selectedLocalTax($event)">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table table-sm table-striped" formArrayName="impuestos">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Impuesto
+                                        </th>
+                                        <th>
+                                            Tipo
+                                        </th>
+                                        <th>
+                                            Tasa
+                                        </th>
+                                        <th>
+                                            Importe
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let tax of getFormArray('impuestos', formImplocal).controls; let i = index;"
+                                        [formGroupName]="i">
+                                        <td>
+                                            {{ tax.value['nombre'] }}
+                                        </td>
+                                        <td>
+                                            {{ tax.value['tipo'] | uppercase }}
+                                        </td>
+                                        <td>
+                                            {{ tax.value['valor'] | decimalX100 }} %
+                                        </td>
+                                        <td>
+                                            <input type="number" formControlName="importe" class="form-control">
+                                            <div
+                                                *ngIf="getFormControl('importe', tax)?.errors && getFormControl('importe', tax)?.touched">
+                                                <small class="text-danger"
+                                                    *ngIf="getFormControl('importe', tax)?.hasError('required')">
+                                                    El <strong>importe</strong> es requerido.
+                                                </small>
+                                                <small class="text-danger"
+                                                    *ngIf="getFormControl('importe', tax)?.hasError('min')">
+                                                    El importe tiene que ser mayor a cero.
+                                                </small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteImplocal(i)">
+                                                <i class="fas fa-trash fa-sm fa-fw"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-sm fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-save fa-sm fa-fw"></i>
+                    <!-- <i class="fas fa-save fa-4x fa-fw"></i> -->
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <!--Complemento de pagos-->
+    <ng-template #modalComplementPays let-modal>
+        <form [formGroup]="formPays" novalidate (ngSubmit)="savePays($event)" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Pagos
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table table-sm table-striped" formArrayName="pays">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">
+                                            Fecha pago
+                                        </th>
+                                        <th>
+                                            Divisa
+                                        </th>
+                                        <th>
+                                            Tipo cambio
+                                        </th>
+                                        <th>
+                                            Forma pago
+                                        </th>
+                                        <th>
+                                            Total pago
+                                        </th>
+                                        <th style="text-align: right;">
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                (click)="openCreateEditPay()">
+                                                <i class="fas fa-plus fa-sm fa-fw"></i>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let doc of getFormArray('pays', formPays).controls; let i = index;"
+                                        [formGroupName]="i">
+                                        <td>
+                                            <input type="datetime-local" class="form-control"
+                                                formControlName="fecha_pago" [readOnly]="true">
+                                        </td>
+                                        <td>
+                                            <ng-select [items]="list_ce_divisas" bindLabel="clave" bindValue="id"
+                                                formControlName="divisa_id" [readonly]="true">
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            {{ doc.value["tipo_cambio"] | currency }}
+                                        </td>
+                                        <td>
+                                            <ng-select [items]="list_ce_forma_pago" bindLabel="descripcion"
+                                                bindValue="id" formControlName="forma_pago_id" [readonly]="true">
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            {{ doc.value["total"] | currency }}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button type="button" class="btn btn-warning btn-sm"
+                                                (click)="openCreateEditPay(i)">
+                                                <i class="fas fa-edit fa-sm fa-fw"></i>
+                                            </button>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-danger btn-sm" (click)="deletePay(i)">
+                                                <i class="fas fa-trash fa-sm fa-fw"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>
+                                            <strong>
+                                                {{ formPays.value["total"] | currency }}
+                                            </strong>
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-sm fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-save fa-sm fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalComplementPayCe let-modal>
+        <form [formGroup]="formPay" novalidate (ngSubmit)="savePay($event)" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <span for="serie"><strong class="text-danger">*</strong> Fecha de pago</span>
+                            <input type="datetime-local" class="form-control" formControlName="fecha_pago">
+                            <div
+                                *ngIf="getFormControl('fecha_pago', formPay)?.errors && getFormControl('fecha_pago', formPay)?.touched">
+                                <small *ngIf="getFormControl('fecha_pago', formPay)?.hasError('required')"
+                                    class="text-danger">
+                                    Seleccione la <strong>fecha de pago</strong>.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <span for="forma_pago"><strong class="text-danger">*</strong> Forma de pago</span>
+                            <ng-select placeholder="Seleccione una opción" formControlName="forma_pago_id">
+                                <ng-option *ngFor="let item of list_ce_forma_pago" [value]="item.id">
+                                    <strong>{{ item.clave }}</strong> - {{ item.descripcion }}
+                                </ng-option>
+                            </ng-select>
+                            <div
+                                *ngIf="getFormControl('forma_pago_id', formPay)?.errors && getFormControl('forma_pago_id', formPay)?.touched">
+                                <small *ngIf="getFormControl('forma_pago_id', formPay)?.hasError('required')"
+                                    class="text-danger">
+                                    Seleccione la <strong>forma de pago</strong>.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <span for="divisa"><strong class="text-danger">*</strong> Moneda</span>
+                            <ng-select placeholder="Seleccione una opción" formControlName="divisa_id">
+
+                                <ng-option *ngFor="let item of list_ce_divisas" [value]="item.id">
+                                    <strong>{{ item.clave }}</strong> - {{ item.descripcion }}
+                                </ng-option>
+
+                            </ng-select>
+                            <div
+                                *ngIf="getFormControl('divisa_id', formPay)?.errors && getFormControl('divisa_id', formPay)?.touched">
+                                <small *ngIf="getFormControl('divisa_id', formPay)?.hasError('required')"
+                                    class="text-danger">
+                                    Seleccione la <strong>divisa</strong> de pago.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <span for="divisa"><strong class="text-danger" ng-show="divisa!='MXN'">*</strong> Tipo de
+                                cambio</span>
+                            <input type="number" formControlName="tipo_cambio" class="form-control"
+                                [readOnly]="formPay.value['divisa']">
+                            <div
+                                *ngIf="getFormControl('tipo_cambio', formPay)?.errors && getFormControl('tipo_cambio', formPay)?.touched">
+                                <small *ngIf="getFormControl('tipo_cambio', formPay)?.hasError('required')"
+                                    class="text-danger">
+                                    Proporcione el <strong>tipo de cambio</strong>.
+                                </small>
+                            </div>
+                            <!-- <input type="number" class="form-control" ng-disabled="this.modulos.pago.pago.divisa=='MXN'" placeholder="0.00" ng-model="this.modulos.pago.pago.tipo_cambio" ng-required="this.modulos.pago.pago.divisa!='MXN'"> -->
+                            <!-- <small class="text-danger" ng-show="formAddPay.divisa.$error.required">Cuando la divisa es {{ this.modulos.pago.pago.divisa }} debe de agregar el <strong>tio de cambio</strong></small> -->
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <span for="total">Monto</span>
+                            <input type="number" class="form-control" readonly formControlName="total">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong class="text-primary">Información bancaria</strong>
+                            <hr>
+                        </div>
+
+                        <div class="col-md-4">
+                            <span>Numero operación</span>
+                            <input type="text" class="form-control" formControlName="numero_operacion"
+                                placeholder="0000051">
+                        </div>
+
+                        <div class="col-md-4">
+                            <span>Cuenta ordenante</span>
+                            <ng-select formControlName="cuenta_ordenante_id" [clearable]="true"
+                                placeholder="Seleccione una opción">
+                                <ng-option *ngFor="let cuenta of list_ce_cuentas_cliente" [value]="cuenta.id">
+                                    <strong>{{ cuenta.cuenta }}</strong> - {{ cuenta.banco }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <span>Cuenta destino</span>
+                            <ng-select formControlName="cuenta_destino_id" [clearable]="true"
+                                placeholder="Seleccione una opción">
+                                <ng-option *ngFor="let cuenta of list_ce_cuentas_empresa" [value]="cuenta.id">
+                                    <strong>{{ cuenta.cuenta }}</strong> - {{ cuenta.banco }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-xl-4">
+                            <span>Tipo cadena de pago</span>
+                            <ng-select formControlName="tipo_cad_pago" placeholder="Seleccione una opción">
+                                <ng-option [value]="'01'">SPEI</ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-sm-12 col-md-8 col-xl-8">
+                            <span>Certificado de pago</span>
+                            <textarea cols="4" class="form-control" formControlName="cert_pago"
+                                placeholder="Es el certificado que corresponde al pago, como una cadena de texto en formato base 64."></textarea>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <span>Cadena original del comprobante de pago</span>
+                            <textarea cols="4" class="form-control" formControlName="cert_pago"
+                                placeholder="&#124;&#124;Pago&#124;Banco&#124;300.00&#124; &#124;"></textarea>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-6">
+                            <span>Sello digital</span>
+                            <textarea cols="4" class="form-control" formControlName="cert_pago"
+                                placeholder="Debe ser expresado como una cadena de texto en formato base 64."></textarea>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong class="text-primary">
+                                Documentos relacionados
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12">
+                            <input type="text" class="form-control" [ngbTypeahead]="searchDocumentToPay"
+                                [resultFormatter]="resultFormatterDocs" [inputFormatter]="inputFormatterDocs"
+                                [resultTemplate]="rds" (selectItem)="selectedDocumentToPay($event.item)"
+                                #instance="ngbTypeahead"
+                                placeholder="Buscador de documentos, por Folio, Serie o Folio fiscal">
+                            <ng-template #rds let-r="result" let-t="term">
+                                <div class="media p-1">
+                                    <div class="media-body">
+                                        <div>
+                                            Serie:<strong> {{ r.serie }} </strong>
+                                            Folio:<strong> {{ r.folio }} </strong>
+                                            Folio fiscal:<strong> {{r.folio_fiscal}} </strong>
+                                            Total: <strong>{{ r.total | currency }}</strong>
+                                        </div>
+                                        <div>
+                                            <small>Emisor: {{ r.emisor }}</small>
+                                        </div>
+                                        <div>
+                                            <small>Receptor: {{ r.receptor }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <div *ngIf="searchingDocs">
+                                <small class="form-text text-muted">Buscando...</small>
+                            </div>
+                            <div *ngIf="searchFailedDocs">
+                                <div class="invalid-feedback">Sin resultados.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-sm table-striped table-hover" formArrayName="documentos">
+                                <thead>
+                                    <tr>
+                                        <th style="width:20%;">Folio fiscal</th>
+                                        <th style="width:5%;">Moneda</th>
+                                        <th style="width:5%;">TC</th>
+                                        <th style="width:5%;">Equivalencia</th>
+                                        <th style="width:10%;">Total</th>
+                                        <th style="width:10%;">Resta</th>
+                                        <th style="width:5%;text-align:center;">Pago completo</th>
+                                        <th style="width:10%;">Abono</th>
+                                        <th style="width:5%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr *ngFor="let doc of getFormArray('documentos', formPay).controls; let i = index;"
+                                        [formGroupName]="i">
+                                        <td>
+                                            <small>
+                                                {{ doc.value['folio_fiscal'] }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <ng-select [items]="list_ce_divisas" bindLabel="clave" bindValue="id"
+                                                formControlName="divisa_id" [readonly]="true">
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            <small>
+                                                {{ doc.value["tipo_cambio"] | currency }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" formControlName="equivalencia"
+                                                [readOnly]="doc.value['divisa_id']==formPay.value['divisa_id']">
+                                        </td>
+                                        <td>
+                                            <small>
+                                                {{ doc.value['total'] | currency }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <small>
+                                                {{ doc.value['anterior'] | currency }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" value="checkedValue"
+                                                    (change)="activaDesactivaPagoCompleto(i)"
+                                                    formControlName="completo">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" min="0.01" [max]="doc.max"
+                                                formControlName="abono" (change)="recalculaPago(i)"
+                                                [readOnly]="doc.value['completo']">
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                (click)="deleteDocument(i)">
+                                                <i class="fas fa-trash fa-xs fa-fw"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-sm fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-save fa-sm fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalCancelDocument let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ cancelador.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluit" *ngIf="cancelador.visible == 0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width:10%">
+                                            Serie-Folio
+                                        </th>
+                                        <th style="width:15%">
+                                            Emisor
+                                        </th>
+                                        <th style="width:15%">
+                                            Receptor
+                                        </th>
+                                        <th style="width:30%">
+                                            Motivo
+                                        </th>
+                                        <th style="width:30%">
+                                            UUID Sustituye
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let cfdi of cancelador.registros; let i = index;">
+                                        <th>
+                                            <small class="text-danger">
+                                                <strong>
+                                                    {{ cfdi.serie }}-{{ cfdi.folio }}
+                                                </strong>
+                                            </small>
+                                        </th>
+                                        <td>
+                                            <small class="text-primary">
+                                                {{ cfdi.emisor }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <small class="text-primary">
+                                                {{ cfdi.receptor }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <ng-select [(ngModel)]="cfdi.motivo">
+                                                <ng-option [value]="'01'"><strong>01</strong>-Comprobantes emitidos con
+                                                    errores con relación.</ng-option>
+                                                <ng-option [value]="'02'"><strong>02</strong>-Comprobantes emitidos con
+                                                    errores sin relación.</ng-option>
+                                                <ng-option [value]="'03'"><strong>03</strong>-No se llevó a cabo la
+                                                    operación.</ng-option>
+                                                <ng-option [value]="'04'"><strong>04</strong>-Operación nominativa
+                                                    relacionada en una factura global.</ng-option>
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control"
+                                                [(ngModel)]="cfdi.folio_fiscal_sustituye" [disabled]="cfdi.motivo!='01'"
+                                                placeholder="B5544B52-90CD-4718-A61A-01DDC86F35B8">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluit" *ngIf="cancelador.visible == 1">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                Enviando {{ cancelador.current }} / {{ cancelador.total }}
+                            </h4>
+                            <hr>
+                            <h5 class="text-danger">
+                                Errores: {{ cancelador.errores }}
+                            </h5>
+                            <hr>
+                            <h5 class="text-success">
+                                Exito: {{ cancelador.exito }}
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ngb-progressbar class="mb-3" type="success" [value]="cancelador.porcentaje"
+                                [striped]="true" [animated]="true" [max]="100">
+                                <i>{{ cancelador.porcentaje }} %</i>
+                            </ngb-progressbar>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluit" *ngIf="cancelador.visible == 2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Folio/Serie</th>
+                                        <th>
+                                            Error
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let error of cancelador.erroresDesc">
+                                        <td><strong>{{ error.serie }}-{{ error.folio }}</strong></td>
+                                        <td>
+                                            {{ error.error }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                    *ngIf="cancelador.visible!=0">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Terminar
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"
+                    *ngIf="cancelador.visible==0">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="procedeCancelacion()"
+                    *ngIf="cancelador.visible==0">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalImportadorXmls let-modal>
+        <form [formGroup]="formImportXML" novalidate (ngSubmit)="procesarXMLS()">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Importador de documentos XML's
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12" style="text-align: right;">
+                            <input type="file" multiple style="display:none;" (change)="loadFilesXMLS($event)"
+                                #importadorXMLS accept="text/xml">
+                            <button type="button" class="btn btn-primary btn-sm" (click)="importadorXMLS.click()">
+                                <i class="fas fa-search fa-lg fa-fw"></i>
+                                Buscar
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-primary btn-sm" (click)="procesarXMLS()"
+                                [disabled]="listFileXML.length<=0">
+                                <i class="fas fa-retweet fa-lg fa-fw"></i>
+                                Procesar
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-danger btn-sm" (click)="clearAllXmlImportador()"
+                                [disabled]="listFileXML.length<=0">
+                                <i class="fas fa-trash fa-lg fa-fw"></i>
+                                Limpiar todo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <table class="table table-sm table-striped" formArrayName="documentos">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            No.
+                                        </th>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let cfdi of getFormArray('documentos', formImportXML).controls; let i = index;"
+                                        ngbTooltip="{{ cfdi.value['message'] }}">
+                                        <td>
+                                            {{ i + 1 }}
+                                        </td>
+                                        <td>
+                                            {{ cfdi.value["name"] }}
+                                        </td>
+                                        <td>
+                                            <i *ngIf="cfdi.value['status']==0"
+                                                class="fas fa-question-circle fa-lg fa-fw text-warning"></i>
+                                            <i *ngIf="cfdi.value['status']==1"
+                                                class="fas fa-check-circle fa-lg fa-fw text-success"></i>
+                                            <i *ngIf="cfdi.value['status']==2"
+                                                class="fas fa-times-circle fa-lg fa-fw text-danger"></i>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash fa-lg fa-fw"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-sm fa-fw"></i>
+                    Cerrar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalImportadorXlsx let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Importador de documentos (I)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong class="text-danger">Nota:</strong>
+                            <span class="text-secondary">Verifique su plantilla ya que esta no sera guardada, solo son
+                                importados los registros de esta.</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="contenedor-input-file-importador" style="display: none;"></div>
+                            <div class="input-group">
+                                <input type="file" style="display:none;"
+                                    (change)="this.loadXLSXImportador($event, this.jqxGridFacturasImportar)"
+                                    #importadorXLSX accept="*.xlsx,*.xls">
+                                <input type="text" class="form-control" placeholder="Archivo seleccionado!!">
+                                <button class="btn btn-success" type="button" (click)="importadorXLSX.click()">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </button>
+                                <button class="btn btn-primary" type="button" ng-click="this.descargarPlantilla();">
+                                    <i class="fa fa-download" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-12" id="contenedorImportadorFacturas">
+                            <jqxGrid #jqxGridFacturasImportar
+                                (onRowdoubleclick)="this.showInvoice($event, jqxGridFacturasImportar)" [width]="'100%'"
+                                [source]="dataAdapterImport" [columns]="columnsImport"
+                                [selectionmode]="'multiplerowsadvanced'">
+                            </jqxGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close()">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <button class="btn btn-primary btn-sm" (click)="this.guardaFacturaMultiple()">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalErroresImportacion let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Errores de importación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <table class="table table-sm table-striped">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Índice
+                                </th>
+                                <th>
+                                    Error
+                                </th>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr *ngFor="let error of this.error_importacion; index as i">
+                                <td>{{ i }}</td>
+                                <td>{{ error }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close()">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalViewDocImport let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <span for="emisor" class="control-label">Emisor</span>
+                            <input type="text" class="form-control" [(ngModel)]="this.factura.company">
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <span for="rfc_smisor">Rfc</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.company_rfc">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <span for="sucursal_nombre">Sucursal</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.branch_company">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--7-->
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <span for="receptor"><strong>Receptor</strong></span>
+                            <input type="text" class="form-control" [(ngModel)]="this.factura.client">
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <span for="rfc_receptor">Rfc</span>
+                            <input type="text" class="form-control" [(ngModel)]="this.factura.client_rfc">
+                        </div>
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <span for="uso_cfdi">Uso Cfdi</span>
+                            <input type="text" class="form-control" [(ngModel)]="this.factura.uso_cfdi">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-lg-3 col-sm-6">
+                            <div class="form-group">
+                                <span for="divisa">Divisa</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.divisa">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3 col-sm-6">
+                            <div class="form-group">
+                                <span for="divisa">Tipo de cambio</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.tipo_cambio">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3 col-sm-6">
+                            <div class="form-group">
+                                <span for="forma_pago">Forma de pago</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.forma_pago">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3 col-sm-6">
+                            <div class="form-group">
+                                <span for="metodo_pago">Metodo de pago</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.metodo_pago">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <span for="condiciones_pago">Condiciones de pago</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.condiciones_pago">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-sm-12">
+                            <div class="form-group">
+                                <span for="serie">Serie</span>
+                                <input type="text" class="form-control" [(ngModel)]="this.factura.serie">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <span for="observaciones">Observaciones</span>
+                                <textarea rows="2" class="form-control"
+                                    [(ngModel)]="this.factura.observaciones"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h4><strong>DESGLOSE</strong></h4>
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-dark table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Descripción</th>
+                                        <th style="width: 10%;">Precio Uni.</th>
+                                        <th style="width: 8%;">Cantidad</th>
+                                        <th style="width: 10%;">Descuento</th>
+                                        <th style="width: 12%;">Subtotal</th>
+                                        <th style="width: 20%;">Impuestos</th>
+                                        <th style="width: 10%;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let concepto of this.factura.detalles">
+                                        <td>{{ concepto.concepto }}</td>
+                                        <td style="text-align: right;">{{ concepto.precio_unitario | currency }}</td>
+                                        <td>{{ concepto.cantidad }}</td>
+                                        <td style="text-align: right;">{{ concepto.descuento | currency }}</td>
+                                        <td style="text-align: right;">{{ concepto.subtotal | currency }}</td>
+                                        <td>
+                                            <div *ngFor="let impueto of concepto.impuestos" style="font-size:14px;">
+                                                ( {{ impueto.tipo == 'retencion' ? '-' : '+' }} ){{ impueto.nombre }} =
+                                                {{impueto.total | currency }}
+                                            </div>
+                                        </td>
+                                        <td style="text-align: right;">{{ concepto.total | currency }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="this.factura.implocal.length>0">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <table class="table table-striped table-dark table-sm">
+                                <tbody>
+                                    <tr *ngFor="let local of this.factura.implocal">
+                                        <td style="width: 60%;">
+                                            {{ local.tipo == 'retencion' ? '-' : '+' }}{{ local.nombre }}
+                                        </td>
+                                        <td style="width: 40%;">
+                                            $ {{ local.importe }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <table class="table table-striped table-dark table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 60%;">( + ) Sub Total:</td>
+                                        <td style="width: 40%;">$ {{ this.factura.subtotal }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>( - ) Descuento:</td>
+                                        <td>$ {{ this.factura.descuento }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>( + ) Traslados federales:</td>
+                                        <td>$ {{ this.factura.total_traslados | currency }}
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>( - ) Retenciones federales:</td>
+                                        <td>$ {{ this.factura.total_retencion | currency }}</td>
+                                    </tr>
+                                    <tr *ngFor="let local of this.factura.implocal">
+                                        <td>( {{ local.tipo == 'retencion' ? '-' : '+' }} ) {{ local.nombre }}</td>
+                                        <td>
+                                            ${{ local.importe | currency}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>( = ) Total:</td>
+                                        <td>$ {{ this.factura.total | currency}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close()">
+                    <i class="fa fa-times" aria-hidden="true"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalEmail let-modal>
+        <form [formGroup]="formEmail" novalidate (ngSubmit)="this.sendEmail($event)" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <strong class="text-danger">*</strong> Plantilla
+                            <ng-select [items]="this.list_templates_generate" bindLabel="name" bindValue="id" placeholder="Seleccione una plantilla" formControlName="plantilla_id"></ng-select>
+                        </div>
+
+                        <div class="col-12">
+                            <strong class="text-danger">*</strong> De
+
+                            <ng-select placeholder="Seleccione una plantilla" formControlName="deparment">
+                                <ng-option *ngFor="let department of this.list_department_serves_company" [value]="department.id">
+                                    <<strong>{{department.nombre}}</strong>> {{ department.username }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+
+                        <div class="col-12">
+                            <strong class="text-danger">*</strong> Para
+                            <ng-select 
+                                [items]="this.list_users_contac" 
+                                bindLabel="email"
+                                bindValue="email"
+                                [addTag]="this.addCustomUser"
+                                placeholder="Seleccione destinatario"
+                                formControlName="para"
+                                [multiple]="true"></ng-select>
+                        </div>
+
+                        <div class="col-12">
+                            CCO
+                            <ng-select 
+                                [items]="this.list_users_cco" 
+                                bindLabel="email"
+                                bindValue="email"
+                                [addTag]="this.addCustomUser"
+                                formControlName="cco"
+                                placeholder="Con copia oculta"
+                                [multiple]="true"></ng-select>
+                        </div>
+
+                        <div class="col-12">
+                            <strong class="text-danger">*</strong> Asunto
+                            <input type="text" class="form-control" formControlName="subject">
+                        </div>
+
+                        <br>
+
+                        <div class="col-12">
+                            Mensaje:
+                            <editor 
+                                apiKey="asza0olm1boezdqv50tyavhaeq67l2uqgbnmfr6y7j751mx2"
+                                [(ngModel)]="this.htmlEmail"
+                                [ngModelOptions]="{standalone: true}"
+                                [init]="{
+                                    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | subscript superscript | orderedlist unorderedlist | outdent indent | leftalign centeralign rightalign blockjustify | unformat | n font size style | image hr link unlink | cut copy paste print',
+                                    tinycomments_mode: 'embedded'}">
+                            </editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal" (click)="modal.close()">
+                    <i class="fa fa-times" aria-hidden="true"></i> Cerrar
+                </button>
+
+                <button class="btn btn-primary btn-sm" type="submit">
+                    <i class="fa fa-share" aria-hidden="true"></i> Enviar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+</section>

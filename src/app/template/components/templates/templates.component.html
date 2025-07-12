@@ -1,0 +1,313 @@
+<main class="container-fluid">
+    <div id="menu_izquierdo">
+        <div id="tabs_contenedor_pestanitas" style="height:100%;">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item active" role="presentation">
+                    <button class="nav-link active" id="campos-tab" data-bs-toggle="tab" data-bs-target="#campos-tab-pane" type="button" role="tab" aria-controls="proveedores-tab-pane" aria-selected="true">
+                        Campo
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="propiedades-tab" data-bs-toggle="tab" data-bs-target="#propiedades-tab-pane" type="button" role="tab" aria-controls="propiedades-tab-pane" aria-selected="false">
+                        Prop
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="objetos-tab" data-bs-toggle="tab" data-bs-target="#objetos-tab-pane" type="button" role="tab" aria-controls="objetos-tab-pane" aria-selected="false">
+                        Objeto
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" style="padding-top:10px;">
+
+                <div class="tab-pane fade show active" id="campos-tab-pane" role="tabpanel" aria-labelledby="campos-tab" tabindex="0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <jqxGrid #jqxGridVars
+                                (onRowdoubleclick)="seleccionarRegistro($event)"
+                                [width]="'100%'" 
+                                [source]="dataAdapter" 
+                                [columns]="columns"
+                                [selectionmode]="'multiplerowsadvanced'">
+                            </jqxGrid>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="objetos-tab-pane" role="tabpanel" aria-labelledby="objetos-tab" tabindex="0">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12">
+                            <button type="button" title="Etiqueta" (click)="addLabel()">
+                                <i class="fa fa-text-width fa-2x" aria-hidden="true"></i>
+                            </button>
+                            &nbsp;
+                            <button type="button" title="Rectangulo" (click)="addRectangle()">
+                                <i class="fa fa-square fa-2x" aria-hidden="true"></i>
+                            </button>
+                            &nbsp;
+                            <button type="button" title="Linea" (click)="addLine()">
+                                <i class="fa fa-window-minimize fa-2x" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="propiedades-tab-pane" role="tabpanel" aria-labelledby="propiedades-tab" tabindex="0">
+                    <div class="container">
+                        <div class="row">
+                            <fieldset class="col-md-12" id="de_Text" style="border:1px solid #000;border-radius:8px;">
+                                <legend style="width: auto;font-size:1rem;">Texto</legend>
+                                <table>
+                                    <tr style="margin-bottom: 5px;">
+                                        <td>
+                                            Fuente:
+                                        </td>
+                                        <td>
+                                            <select class="form-control" id="de_prop_font_family">
+                                                <option value="none">Ninguna</option>
+                                                <option value="Arial">Arial</option>
+                                                <option value="Serif">Serif</option>
+                                                <option value="Sans-serif">Sans Serif</option>
+                                                <option value="Times New Roman">Times new roman</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Tamaño:
+                                        </td>
+                                        <td>
+                                            <select class="form-control" id="de_prop_text_size">
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="14">14</option>
+                                                <option value="16">16</option>
+                                                <option value="18">18</option>
+                                                <option value="20">20</option>
+                                                <option value="22">22</option>
+                                                <option value="24">24</option>
+                                                <option value="26">26</option>
+                                                <option value="28">28</option>
+                                                <option value="36">36</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="_label_" style="margin-bottom:10px;margin-top:15px;">
+                                    Alineación
+                                </div>
+                                <table>
+                                    <tr>
+                                        <td><label>
+                                                <input type="radio" name="radio-text-align" value="left">
+                                                <i class="fa fa-align-left fa-2x" aria-hidden="true"></i>
+                                            </label></td>
+                                        <td><label>
+                                                <input type="radio" name="radio-text-align" value="center">
+                                                <i class="fa fa-align-center fa-2x" aria-hidden="true"></i>
+                                            </label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>
+                                                <input type="radio" name="radio-text-align" value="right">
+                                                <i class="fa fa-align-right fa-2x" aria-hidden="true"></i>
+                                            </label></td>
+                                        <td><label>
+                                                <input type="radio" name="radio-text-align" value="justify">
+                                                <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
+                                            </label></td>
+                                    </tr>
+                                </table>
+
+                                <ul class="estilos_">
+                                    <li>
+                                        <input type="checkbox" id="de_prop_font_bold" />
+                                        <label for="cbestilos1" style="text-align: center;"><i class="fa fa-bold fa-2x"
+                                                aria-hidden="true"></i></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="de_prop_font_italic" />
+                                        <label for="cbestilos2" style="text-align: center;"><i class="fa fa-italic fa-2x"
+                                                aria-hidden="true"></i></label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="de_prop_font_underline" />
+                                        <label for="cbestilos3" style="text-align: center;"><i class="fa fa-underline fa-2x"
+                                                aria-hidden="true"></i></label>
+                                    </li>
+                                </ul>
+                            </fieldset>
+                            <fieldset class="col-md-12" id="de_Color"
+                                style="border:1px solid #000;border-radius:8px;margin-top: 10px;">
+                                <legend style="width: auto;font-size:1rem;">Border</legend>
+                                Color texto:<br>
+                                <input type="color" value="#000000" class="form-control" id="de_prop_text_color">
+                                Color Fondo:<br>
+                                <input type="color" value="#FFFFFF" class="form-control" id="de_prop_backgroud_color">
+                            </fieldset>
+                            <br>
+                            <fieldset class="col-md-12" id="de_Border"
+                                style="border:1px solid #000;border-radius:8px;margin-top: 10px;">
+                                <legend style="width: auto;font-size:1rem;">Border</legend>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>
+                                            <label><input type="checkbox" class="filled-in chk-col-grey de_border"
+                                                    value="Top" id="de_prop_border_top">
+                                                Superior</label>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="" id="" style="max-width: 50px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><input type="checkbox" class="filled-in chk-col-grey de_border"
+                                                    value="Right" id="de_prop_border_right">
+                                                Derecha</label>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="" id="" style="max-width: 50px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><input type="checkbox" class="filled-in chk-col-grey de_border"
+                                                    value="Bottom" id="de_prop_border_bottom">
+                                                Inferior</label>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="" id="" style="max-width: 50px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label><input type="checkbox" class="filled-in chk-col-grey de_border"
+                                                    value="Left" id="de_prop_border_left">
+                                                Izquierda</label>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="" id="" style="max-width: 50px;">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            <fieldset class="col-md-12" id="de_Grid"
+                                style="border:1px solid #000;border-radius:8px;margin-top: 10px;">
+                                <legend style="width: auto;font-size:1rem;">Grid</legend>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav justify-content-end" style="position:fixed;width:100%;background:#04272b;z-index:700;">
+        <li class="nav-item">
+            <a class="nav-link active" href="javascript:void(0)" ng-click="mv.settingTemplate()"><i class="fa fa-cogs"
+                    aria-hidden="true"></i> Configurar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="javascript:void(0)" (click)="openSave()"><i class="fa fa-floppy-o"
+                    aria-hidden="true"></i> Guardar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Salir</a>
+        </li>
+    </ul>
+
+    <div 
+        id="dd_document_area" 
+        style="min-width:1020px;z-index:0;padding:30px 0px;width:100%;background-color:#827e7e;margin:0 auto;padding-top:80px;">
+    </div>
+
+
+
+    <!-- Configurar hoja -->
+    <ng-template #modalSettings let-modal>
+
+    </ng-template>
+
+    <!-- Guardar plantilla -->
+    <ng-template #modalSave let-modal>
+        <form [formGroup]="formSave" novalidate (ngSubmit)="save()">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{ title }}
+                </h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close" (click)="modal.close(false)"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <span><strong class="text-danger">*</strong> Nombre</span>
+                            <input type="text" class="form-control" formControlName="name">
+                            <div *ngIf="getFormControl('name', formSave)?.errors && getFormControl('name', formSave)?.touched">
+                                <small class="text-danger" *ngIf="getFormControl('name', formSave)?.hasError('required')">
+                                    El <strong>nombre</strong> es requerido.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <span>Descripción</span>
+                            <textarea rows="7" class="form-control" formControlName="description"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <span><strong class="text-danger">*</strong> Tipo</span>
+                            <ng-select formControlName="type" placeholder="Seleccione una opción">
+                                <ng-option *ngFor="let type of types" [value]="type.id">{{type.label}}</ng-option>
+                            </ng-select>
+                            <div *ngIf="this.getFormControl('type', this.formSave)?.errors && getFormControl('type', formSave)?.touched">
+                                <small class="text-danger" *ngIf="getFormControl('type', formSave)?.hasError('required')">
+                                    El <strong>tipo</strong> es requerido.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <span>SubTipo</span>
+                            <ng-select 
+                                formControlName="subtype"
+                                placeholder="Seleccione una opción">
+                                <ng-option value="I"><strong>I</strong>-Ingreso</ng-option>
+                                <ng-option value="E"><strong>E</strong>-Egreso</ng-option>
+                                <ng-option value="T"><strong>T</strong>-Traslado</ng-option>
+                                <ng-option value="P"><strong>P</strong>-Pago</ng-option>
+                                <ng-option value="C"><strong>C</strong>-Cotización</ng-option>
+                            </ng-select>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group form-check my-4">
+                                <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                <label for="acceptTerms" class="form-check-label">
+                                    {{ getFormControl('is_active', formSave)?.value ? 'Activo' : 'Inactivo' }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-lg fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-save fa-lg fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+</main>

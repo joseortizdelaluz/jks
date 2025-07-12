@@ -1,0 +1,313 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Clientes" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <span for="filtro_razon_social">Razón social</span>
+            <input type="text" name="email" class="form-control" [(ngModel)]="filter.razon_social" placeholder="Razón social">
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Status
+            <ng-select 
+            [(ngModel)]="filter.is_active"
+            style="width: 100%;"
+            [markFirst]="true">
+                <ng-option [value]="'T'">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <span for="filtro_razon_social">RFC</span>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.rfc" placeholder="XAXX010101000" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Clientes
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="createCustomer()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="editCustomer()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="viewCustomer()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="deleteCustomer()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+            <button class="btn btn-secondary btn-sm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                69B
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridCustomers
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'" 
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalCustomer let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="saveCustomer($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span for="razon_social"><strong class="text-danger">+</strong> Razon social</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" name="razon_social" formControlName="razon_social">
+                                <div *ngIf="getFormControl('razon_social', form)?.errors && getFormControl('razon_social', form)?.touched">
+                                    <!-- <small *ngIf="getFormControl('razon_social', form)?.hasError('required')" class="text-danger">
+                                        La <strong>razon social</strong> es requerida.
+                                    </small> -->
+                                    <small *ngIf="getFormControl('razon_social', form)?.getError('razonSocialAvailable') != null" class="text-danger">
+                                        La razon social <strong>{{ form.get('razon_social')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <span for="rfc">R.F.C.</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="rfc" minlength="12" maxlength="13">
+                                <div *ngIf="getFormControl('rfc', form)?.errors && getFormControl('rfc', form)?.touched">
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona moral de 12 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona fisica es de 13 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.getError('rfcAvailable') != null" class="text-danger">
+                                        El Rfc <strong>{{ form.get('rfc')?.value }}</strong> ya se encuentra en uso.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.getError('rfcInvalid') != null" class="text-danger">
+                                        El Rfc <strong>{{ form.get('rfc')?.value }}</strong> no tiene la estructura valida.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <span for="alias"><strong class="text-danger">+</strong> Alias</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="alias">
+                            </div>
+
+                            <div class="col-md-6">
+                                <span for="limite_credito">Limite de credito</span>
+                                <input type="number" class="form-control form-control-sm form-control-bold" formControlName="limite_credito">
+                            </div>
+
+                            <div class="col-md-6">
+                                <span for="rfc">Régimen</span>
+                                <ng-select
+                                    class="custom"
+                                    [items]="list_regimenes"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    formControlName="regimen_id">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6">
+                                <span for="id_uso_cfdi">Uso CFDI</span>
+                                <ng-select
+                                    [items]="list_usos_cfdi"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    formControlName="uso_cfdi_id">
+                                </ng-select>
+                            </div>
+                        </div>
+    
+                        <br>
+                        <strong class="text-primary">Dirección</strong>
+                        <hr style="margin-top:0;">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span for="cp"><!--<strong class="text-danger">*</strong>--> Código postal</span>
+                                <input 
+                                id="typeadead-template"
+                                type="text"
+                                class="form-control form-control-sm form-control-bold"
+                                formControlName="cp"
+                                [ngbTypeahead]="buscarCp"
+                                [resultFormatter]="resultFormatter"
+                                [inputFormatter]="inputFormatter"
+                                [resultTemplate]="rcp"
+                                (selectItem)="selectedCP($event.item)"
+                                #instance="ngbTypeahead"
+                                placeholder="Buscar CP"
+                                typeaheadOptionField="cp"/>
+                                <ng-template #rcp let-r="result" let-t="term">
+                                    <div class="media p-1">
+                                        <div class="media-body">
+                                            <span>
+                                                <strong class="text-primary">{{r.cp}}</strong>
+                                                {{r.asenta}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <div *ngIf="searching">
+                                    <small class="form-text text-muted">Buscando...</small>
+                                </div>
+                                <div *ngIf="searchFailed">
+                                    <div class="invalid-feedback">Lo sentimos, no se han encontrado resultados.</div>
+                                </div>
+                                <!--
+                                    @if (searching) {
+                                        <small class="form-text text-muted">Buscando...</small>
+                                    }
+                                @if (searchFailed) {
+                                    <div class="invalid-feedback">Lo sentimos, no se han encontrado resultados.</div>
+                                }-->
+                                <div *ngIf="getFormControl('cp', form)?.errors && getFormControl('cp', form)?.touched">
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser de 5 digitos.
+                                    </small>
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser de 5 digitos.
+                                    </small>
+                                    <small *ngIf="getFormControl('cp', form)?.hasError('pattern')" class="text-danger">
+                                        El <strong>CP</strong> debe de ser ti por numerico.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-7 col-sm-12 col-lg-7">
+                                <span for="calle">Calle</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="calle">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-3">
+                                <span for="num_ext">Num Ext</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="num_ext">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-lg-3">
+                                <span for="num_int">Num Int</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="num_int">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="colonia">Colonia</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="colonia">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="colonia">Referencia</span>
+                                <input type="text" class="form-control form-control-sm form-control-bold" formControlName="referencia">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="municipio">Municipio</span>
+                                <ng-select
+                                    [items]="list_municipios"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    formControlName="municipio_id">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="estado">Estado</span>
+                                <ng-select
+                                    [items]="list_estados"
+                                    bindLabel="descripcion"
+                                    bindValue="id"
+                                    placeholder="Seleccione una opción"
+                                    (change)="loadMunicipios($event)"
+                                    formControlName="estado_id">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-lg-6">
+                                <span for="estado">País</span>
+                                <ng-select 
+                                    [items]="list_paises" 
+                                    bindLabel="descripcion" 
+                                    bindValue="id" 
+                                    placeholder="Seleccione una opción"
+                                    (change)="loadEstados($event)"
+                                    formControlName="pais_id">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <br>
+                        <strong class="text-primary">Otros datos</strong>
+                        <hr style="margin-top: 0;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span>Contacto</span>
+                                <input type="text" name="contacto" id="contacto" class="form-control form-control-sm form-control-bold" formControlName="contacto">
+                            </div>
+                            <div class="col-md-6">
+                                <span>Telefono</span>
+                                <input type="text" name="telefono" id="telefono" class="form-control form-control-sm form-control-bold" formControlName="telefono">
+                            </div>
+                            <div class="col-md-6">
+                                <span>Correo</span>
+                                <input type="email" class="form-control form-control-sm form-control-bold" formControlName="correo">
+                                <div *ngIf="getFormControl('correo', form)?.errors && getFormControl('rfc', form)?.touched">
+                                    <small *ngIf="getFormControl('correo', form)?.hasError('email')" class="text-danger">
+                                        EL <strong>correo</strong> no es valido.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-check my-4">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</section>

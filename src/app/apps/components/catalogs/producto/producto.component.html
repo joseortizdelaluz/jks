@@ -1,0 +1,1090 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Productos y servicios" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-md-12 col-md-4 col-lg-3">
+            Clave interna
+            <input type="text" name="clave" id="clave" class="form-control" placeholder="Clave" [(ngModel)]="filter.clave">
+        </div>
+        <div class="col-md-12 col-md-4 col-lg-3">
+            <span>Departamento</span>
+            <ng-select
+                [items]="listaDepartamentos"
+                bindLabel="nombre"
+                bindValue="id"
+                placeholder="Seleccione una opción"
+                [(ngModel)]="filter.departamento_id">
+            </ng-select>
+        </div>
+        <div class="col-md-12 col-md-4 col-lg-3">
+            <span>Clase</span>
+            <ng-select
+                [items]="listaClases"
+                bindLabel="nombre"
+                bindValue="id"
+                placeholder="Seleccione una opción"
+                [(ngModel)]="filter.clase_id">
+            </ng-select>
+        </div>
+        <div class="col-md-12 col-md-4 col-lg-3">
+            <span>Categoria</span>
+            <ng-select
+                [items]="listaCategorias"
+                bindLabel="nombre"
+                bindValue="id"
+                placeholder="Seleccione una opción"
+                [(ngModel)]="filter.categoria_id">
+            </ng-select>
+        </div>
+
+        <div class="col-md-12 col-md-4 col-lg-3 form-group">
+            <span class="col-form-label">
+                Estatus
+            </span>
+
+            <select class="form-select" [(ngModel)]="filter.is_active">
+                <option [value]="">Todos</option>
+                <option [value]="true">Activos</option>
+                <option [value]="false">Inactivos</option>
+            </select>
+        </div>
+
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <span class="form-label">Mostrar</span>
+            <select class="form-select" [(ngModel)]="filter.limit" placeholder="Seleccione una categoria">
+                <option value="50">50</option>
+                <option value="150">150</option>
+                <option value="300">300</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+                <option value="9999999999">Todos</option>
+            </select>
+        </div>
+
+        <div class="col-md-12 col-md-7 col-lg-7 form-group">
+            <span class="form-label">Nombre</span>
+
+            <div class="input-group mb-3">
+                <input type="text" name="txt_razon_social" id="filter_razon_social" class="form-control" placeholder="Nombre producto" [(ngModel)]="filter.nombre">
+                <button class="btn btn-primary" type="button" (click)="loadGrid()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Productos
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+            <button class="btn btn-secondary btn-sm">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                69B
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridProductos (onRowselect)="seleccionarRegistro($event)" [width]="'100%'"
+                [source]="dataAdapter" [columns]="columns" [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalTypeProduct let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Tipo producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-link" (click)="openCreateInventario()">
+                                                Producto inventario
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-link" (click)="openCreateServicio()">
+                                                Servicio
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class="btn btn-link" (click)="openCreateKit()">
+                                                Kit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #modalCEInventario let-modal>
+        <form [formGroup]="form" class="modal-content" (ngSubmit)="saveProduct($event)" novalidate>
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">{{ titleModal }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            Información general
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>
+                                        <strong class="text-danger">*</strong>
+                                        Nombre producto
+                                    </span>
+                                    <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre del producto" autocomplete="off">
+                                    <div *ngIf="getFormControl('nombre', form)?.errors && getFormControl('nombre', form)?.touched">
+                                        <small *ngIf="getFormControl('nombre', form)?.hasError('required')" class="text-danger">
+                                            El <strong>nombre</strong> es requerido.
+                                        </small>
+                                        <small *ngIf="getFormControl('nombre', form)?.getError('pNAvailable') != null" class="text-danger">
+                                            El producto <strong>{{ form.get('nombre')?.value }}</strong> ya se encuentra dado de alta.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Clave interna producto</span>
+                                    <input type="text" class="form-control" formControlName="clave" placeholder="Clave interna del producto" autocomplete="off">
+                                    <div *ngIf="getFormControl('clave', form)?.errors && getFormControl('clave', form)?.touched">
+                                        <small *ngIf="getFormControl('clave', form)?.getError('pCAvailable') != null" class="text-danger">
+                                            El producto <strong>{{ form.get('clave')?.value }}</strong> ya se encuentra dado de alta.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Código de barras</span>
+                                    <input type="text" class="form-control" formControlName="codigo_barras" placeholder="Código de barras del producto" autocomplete="off">
+                                    <div *ngIf="getFormControl('codigo_barras', form)?.errors && getFormControl('clave', form)?.touched">
+                                        <small *ngIf="getFormControl('codigo_barras', form)?.getError('pCBAvailable') != null" class="text-danger">
+                                            El producto <strong>{{ form.get('codigo_barras')?.value }}</strong> ya se encuentra dado de alta.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Nombre/codigo proveedor</span>
+                                    <input type="text" class="form-control" formControlName="nombre_clave_proveedor" placeholder="Nombre o clave del proveedor" autocomplete="off">
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Unidad de stock</span>
+                                    <ng-select
+                                        [items]="list_unidad_medida"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="unidad_stock_id">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Unidad de compra</span>
+                                    <ng-select
+                                        [items]="list_unidad_medida"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="unidad_compra_id">
+                                    </ng-select>
+                                </div>
+            
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Unidad de venta</span>
+                                    <ng-select
+                                        [items]="list_unidad_medida"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="unidad_venta_id">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>
+                                        Factor
+                                    </span>
+                                    <input type="number" class="form-control" formControlName="factor">
+                                </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 form-group">
+                                    Descripción
+                                    <textarea rows="4" class="form-control" formControlName="descripcion" placeholder="Agregue acá alguna descripción y/o detalles del producto"></textarea>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 form-group">
+                                    Comentarios
+                                    <textarea rows="4" class="form-control" formControlName="comentario" placeholder="Agregue acá algun comentario al producto"></textarea>
+                                </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4 col-sm-12 form-group">
+                                    <!--
+                                        Los números de serie son útiles para artículos que podrían requerir servicio posventa, 
+                                        como celulares, laptops, refrigeradores, y cualquier dispositivo electrónico. 
+                                        Puede utilizar el número de seria del fabricante o el propio, dependiendo 
+                                        de cómo administre estos productos.
+                                    -->
+                                    <div class="form-group form-check my-4">
+                                        <input type="checkbox" formControlName="is_active" class="form-check-input"/>
+                                        <label for="acceptTerms" class="form-check-label">
+                                            {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                        </label>
+                                    </div>
+            
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" formControlName="numero_serie">
+                                        <label class="form-check-label" for="numero_serie">Número de serie</label>
+                                    </div>
+                                    <!--
+                                        Los Lotes funcionan para productos que se reciben en gran cantidad y para los cuales un 
+                                        número de lote puede ayudar en los reportes, controles de calidad, o cualquier otra 
+                                        información. Los lotes le ayudarán a identificar un grupo de piezas que, por ejemplo, 
+                                        un defecto de producción. También puede ser útil para un lote de producción de ropa o alimentos.
+                                    -->
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" formControlName="lotes">
+                                        <label class="form-check-label" for="lotes">Lotes</label>
+                                    </div>
+                                    <!--
+                                        
+                                    -->
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" formControlName="pedimento_aduanal">
+                                        <label class="form-check-label" for="pedimento_aduanal">Pedimentos aduanales</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <br>
+            
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            Clasificación
+                        </div>
+            
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 col-sm-12">
+                                    <span>Departamento</span>
+                                    <ng-select
+                                        [items]="list_departamentos_ce"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="departamento_id">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Origen</span>
+                                    <select name="origen" id="origen" class="form-control" formControlName="origen">
+                                        <option value="N">Nacional</option>
+                                        <option value="I">Importación</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Clase</span>
+                                    <ng-select
+                                        [items]="list_clases_ce"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="clase_id">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Categoría</span>
+                                    <ng-select
+                                        [items]="list_categorias_ce"
+                                        bindLabel="name"
+                                        bindValue="id"
+                                        placeholder="Seleccione una opción"
+                                        formControlName="categoria_id">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Disponibilidad</span>
+                                    <!-- <jqxGrid #jqxGridSucursales (onRowselect)="addSucursal($event)" (onRowunselect)="removeSucursal($event)" 
+                                        [columns]="columns" [source]="dataAdapter"  height="150" [width]="'100%'" [selectionmode]="'checkbox'" 
+                                        ></jqxGrid> -->
+                                    <!-- <jqxGrid #jqxGridAlmacenes (onRowselect)="seleccionarRegistro($event)" [width]="'100%'"
+                                        [source]="dataAdapter" [columns]="columns" [selectionmode]="'multiplerowsadvanced'">
+                                    </jqxGrid> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="proveedores-tab" data-bs-toggle="tab" data-bs-target="#proveedores-tab-pane" type="button" role="tab" aria-controls="proveedores-tab-pane" aria-selected="true">Inventario</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="precios-tab" data-bs-toggle="tab" data-bs-target="#precios-tab-pane" type="button" role="tab" aria-controls="precios-tab-pane" aria-selected="false">Precios</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="ubicaciones-tab" data-bs-toggle="tab" data-bs-target="#ubicaciones-tab-pane" type="button" role="tab" aria-controls="ubicaciones-tab-pane" aria-selected="false">Ubicaciones</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="impuestos-tab" data-bs-toggle="tab" data-bs-target="#impuestos-tab-pane" type="button" role="tab" aria-controls="impuestos-tab-pane" aria-selected="false">SAT</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="imagenes-tab" data-bs-toggle="tab" data-bs-target="#imagenes-tab-pane" type="button" role="tab" aria-controls="imagenes-tab-pane" aria-selected="false">Imagenes</button>
+                                </li>
+                            </ul>
+
+
+                            <!--
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="proveedores-tab" data-bs-toggle="tab" data-bs-target="#proveedores-tab-pane" type="button" role="tab" aria-controls="proveedores-tab-pane" aria-selected="true">
+                                            Compra / Inventario
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="precios-tab" data-bs-toggle="tab" data-bs-target="#precios-tab-pane" type="button" role="tab" aria-controls="precios-tab-pane" aria-selected="true">
+                                            Venta / Precios
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="ubicaciones-tab" data-bs-toggle="tab" data-bs-target="#ubicaciones-tab-pane" type="button" role="tab" aria-controls="ubicaciones-tab-pane" aria-selected="true">
+                                            Ubicaciones / Sucursales
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="impuestos-tab" data-bs-toggle="tab" data-bs-target="#impuestos-tab-pane" type="button" role="tab" aria-controls="impuestos-tab-pane" aria-selected="true">
+                                            Información SAT
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="imagenes-tab" data-bs-toggle="tab" data-bs-target="#imagenes-tab-pane" type="button" role="tab" aria-controls="imagenes-tab-pane" aria-selected="true">
+                                            Imagenes
+                                        </button>
+                                    </li>
+                                </ul>
+                            -->
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <!-- Tab PROVEEDORES -->
+                                <div class="tab-pane fade show active" id="proveedores-tab-pane" role="tabpanel" aria-labelledby="proveedores-tab" tabindex="0">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                            Precio de compra
+                                            <input type="text" name="precio_compra" id="precio_compra" class="form-control" formControlName="precio_compra" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <table formArrayName="proveedores" class="table table-sm" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 35%;"><span class="text-danger">*</span> Proveedor</th>
+                                                        <th style="width: 20%;">Divisa</th>
+                                                        <th style="width: 10%;">Preferido</th>
+                                                        <th style="width: 25%;"><span class="text-danger">*</span> Precio de compra</th>
+                                                        <th style="width: 10%;">
+                                                            <button type="button" class="btn btn-primary" aria-label="Agregar nuevo proveedor" (click)="agregarProveedor();">
+                                                                <i class="fas fa-plus fa-sm fa-fw"></i>
+                                                                Proveedor
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let proveedor of getFormArray('proveedores', this.form).controls; 
+                                                                let i = index;" [formGroupName]="i">
+                                                        <td>
+                                                            <ng-select 
+                                                                [items]="list_proveedores_ce"
+                                                                bindValue="id"
+                                                                bindLabel="razon_social"
+                                                                placeholder="Seleccione proveedor"
+                                                                formControlName="proveedor_id">
+                                                            </ng-select>
+                                                        </td>
+                                                        <td>
+                                                            <ng-select 
+                                                                [items]="list_divisas_ce"
+                                                                bindValue="id"
+                                                                bindLabel="descripcion"
+                                                                placeholder="Divisa"
+                                                                formControlName="divisa_id">
+                                                            </ng-select>
+                                                        </td>
+                                                        <td style="width: 45px;" class="text-center">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" formControlName="default"><!--(change)="setDefaultPrefer(i, $event)"-->
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" formControlName="precio">
+                                                                <span class="input-group-text" id="basic-addon2">x unidadCompra</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="button" (click)="eliminaProveedor(i)" aria-label="icon" class="btn btn-danger">
+                                                                <i class="fas fa-trash-alt fa-sm fa-fw"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <!-- Tab PRECIOS -->
+                                <div class="tab-pane fade" id="precios-tab-pane" role="tabpanel" aria-labelledby="precios-tab" tabindex="0">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                            <span>Peso del articulo</span>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" class="form-control" name="peso" id="peso" formControlName="peso">
+                                                &nbsp;
+                                                <select name="factor_peso" id="factor_peso" class="form-control" formControlName="unidad_peso">
+                                                    <option value="">Seleccione</option>
+                                                    <option value="lb">Libras</option>
+                                                    <option value="kg">Kilos</option>
+                                                    <option value="gr">Gramos</option>
+                                                </select>
+                                                &nbsp;
+                                                <span>
+                                                    Por unidadVenta
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                            <span>Metodo de costeo</span>
+                                            <select name="" id="" class="form-select form-select-sm">
+        
+                                            </select>
+                                        </div> -->
+                                    </div>
+        
+                                    <strong>Listado de precios</strong>
+                                    <table class="table table-sm table-bordered" style="width: 98%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%;">
+                                                    Precios disponibles
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    Precio base
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-success text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo1">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-danger text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo2">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-info text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo3">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-warning text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo4">
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="precios">
+                                            <tr *ngFor="let precio of getFormArray('precios', this.form).controls; 
+                                            let i = index;" [formGroupName]="i">
+                                                <td>
+                                                    {{ precio.get("nombre")?.value }}
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="base">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo1">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo2">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo3">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo4">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- TAB UBICACIONES -->
+                                <div class="tab-pane fade" id="ubicaciones-tab-pane" role="tabpanel" aria-labelledby="ubicaciones-tab" tabindex="0">
+                                    <table formArrayName="sucursales" class="table table-sm table-bordered" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%;">Sucursal</th>
+                                                <th style="width: 17%;">Stock</th>
+                                                <th style="width: 17%;">Minimo / Critico</th>
+                                                <th style="width: 17%;">Maximo / Optimo</th>
+                                                <th style="width: 20%;">Ubicación interna</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let sucursal of getFormArray('sucursales', this.form).controls; 
+                                                let i = index;" [formGroupName]="i">
+                                                <td>
+                                                    <div><strong>{{ sucursal.get("nombre")?.value }}</strong></div>
+                                                    <div><small>{{ sucursal.get("direccion")?.value }}</small></div>
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" formControlName="stock" placeholder="Stock">
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" formControlName="min" placeholder="Nivel crítico">
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control" formControlName="max" placeholder="Nivel óptimo">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" formControlName="ubicacion" placeholder="Ubicación interna">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- TAB IMPUESTOS -->
+                                <div class="tab-pane fade" id="impuestos-tab-pane" role="tabpanel" aria-labelledby="impuestos-tab" tabindex="0">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <strong for="">
+                                                Impuestos
+                                            </strong>
+                                            <ul formArrayName="impuestos" class="list-group">
+                                                <li *ngFor="let tax of getFormArray('impuestos', this.form).controls;let i = index;" class="list-group-item" [formGroupName]="i">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" formControlName="seleccionado" name="seleccionado" (change)="agregarEliminarImpuesto(i, $event)"/>
+                                                        <label class="form-check-label" for="seleccionado">{{ tax.get("tipo")?.value == trasladoRetencion.Traslado ? '+' : '-' }} {{ tax.get("nombre")?.value }}</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <span>Producto servicio</span>
+                                            <input 
+                                                id="typeadead-template"
+                                                type="text"
+                                                class="form-control"
+                                                formControlName="producto_servicio"
+                                                [ngbTypeahead]="searchProductoServicio"
+                                                [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                                [inputFormatter]="inputFormatterProductoServicioClaveUnidad"
+                                                [resultTemplate]="rps"
+                                                (selectItem)="selectedProductoServicio($event.item)"
+                                                #instance="ngbTypeahead"
+                                                placeholder="01010101 - No existe en el catálogo">
+                                            <ng-template #rps let-r="result" let-t="term">
+                                                <div class="media p-1">
+                                                    <div class="media-body">
+                                                        <span>
+                                                            <strong class="text-primary">{{r.clave}}</strong>
+                                                            {{r.descripcion}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                            <div *ngIf="searchingPS">
+                                                <small class="form-text text-muted">Buscando...</small>
+                                            </div>
+                                            <div *ngIf="searchFailedPS">
+                                                <div class="invalid-feedback">Sin resultados.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <span>Unidad de medida</span>
+                                            <input 
+                                                id="typeadead-template"
+                                                type="text"
+                                                class="form-control"
+                                                formControlName="unidad_medida"
+                                                [ngbTypeahead]="searchUnidadMedida"
+                                                [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                                [inputFormatter]="inputFormatterProductoServicioClaveUnidad"
+                                                [resultTemplate]="rum"
+                                                (selectItem)="selectedUnidadMedida($event.item)"
+                                                #instance="ngbTypeahead"
+                                                placeholder="E48 - Unidad de servicio">
+                                            <ng-template #rum let-r="result" let-t="term">
+                                                <div class="media p-1">
+                                                    <div class="media-body">
+                                                        <span>
+                                                            <strong class="text-primary">{{r.clave}}</strong>
+                                                            {{r.descripcion}}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                            <div *ngIf="searchingUM">
+                                                <small class="form-text text-muted">Buscando...</small>
+                                            </div>
+                                            <div *ngIf="searchFailedUM">
+                                                <div class="invalid-feedback">Sin resultados.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="imagenes-tab-pane" role="tabpanel" aria-labelledby="imagenes-tab" tabindex="0">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col">
+                                                <strong>Imagenes producto</strong>
+                                            </div>
+                                        </div>
+            
+                                        <table formArrayName="imagenes" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 70%;">
+                                                        Imagen
+                                                    </th>
+                                                    <th style="width: 10%;">
+                                                        Defaul
+                                                    </th>
+                                                    <th style="width: 30%;" class="text-right">
+                                                        <button type="button" class="btn btn-sm btn-primary" (click)="addImagen()">
+                                                            <i class="fa fa-plus"></i>
+                                                            Agregar
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let imagen of getFormArray('imagenes', this.form).controls; 
+                                                            let i = index;" [formGroupName]="i">
+                                                    <td class="align-middle">
+                                                        <div class="input-group mb-3" *ngIf="!imagen.get('subloaded')?.value">
+                                                            <div class="custom-file">
+                                                                <input type="file" class="custom-file-input" id="inputGroupFile03" *ngIf="!imagen.get('subloaded')?.value" (change)="onFileChange(i, $event)" aria-describedby="inputGroupFileAddon03">
+                                                                <label class="custom-file-label" for="inputGroupFile03">Seleccione una imagen</label>
+                                                            </div>
+                                                        </div>
+                                                        <img *ngIf="imagen.get('subloaded')?.value" src="{{ imagen.get('base_64')?.value }}" style="max-width: 150px;max-height:150px;">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input class="form-check-input" type="checkbox" formControlName="default" (change)="setDefaultImg(i, $event)">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-sm btn-danger" (click)="eliminarImagen(i)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-lg fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                    <i class="fas fa-save fa-lg fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalCEService let-modal>
+        <form [formGroup]="form" class="modal-content" (ngSubmit)="saveProduct($event)" novalidate>
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">{{ titleModal }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluit">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            Información general
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                                    <span>
+                                        <strong class="text-danger">*</strong>
+                                        Nombre servicio
+                                    </span>
+                                    <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre del producto" autocomplete="off">
+                                    <div *ngIf="getFormControl('nombre', form)?.errors && getFormControl('nombre', form)?.touched">
+                                        <small *ngIf="getFormControl('nombre', form)?.hasError('required')" class="text-danger">
+                                            El <strong>nombre</strong> es requerido.
+                                        </small>
+                                        <small *ngIf="getFormControl('nombre', form)?.getError('pNAvailable') != null" class="text-danger">
+                                            El producto <strong>{{ form.get('nombre')?.value }}</strong> ya se encuentra dado de alta.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                                    <span>Clave servicio</span>
+                                    <input type="text" class="form-control" formControlName="clave" placeholder="Clave interna del producto" autocomplete="off">
+                                    <div *ngIf="getFormControl('clave', form)?.errors && getFormControl('clave', form)?.touched">
+                                        <small *ngIf="getFormControl('clave', form)?.getError('pCAvailable') != null" class="text-danger">
+                                            El producto <strong>{{ form.get('clave')?.value }}</strong> ya se encuentra dado de alta.
+                                        </small>
+                                    </div>
+                                </div>
+                            
+                                <div class="col-md-6 col-lg-6 col-sm-12 form-group">
+                                    Descripción
+                                    <textarea rows="3" class="form-control" formControlName="descripcion" placeholder="Agregue acá alguna descripción y/o detalles del producto"></textarea>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 form-group">
+                                    Comentarios
+                                    <textarea rows="3" class="form-control" formControlName="comentario" placeholder="Agregue acá algun comentario al producto"></textarea>
+                                </div>
+
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <span>Disponibilidad</span>
+                                    <!-- <jqxGrid #jqxGridSucursales (onRowselect)="addSucursal($event)" (onRowunselect)="removeSucursal($event)" 
+                                        [columns]="columns" [source]="dataAdapter"  height="150" [width]="'100%'" [selectionmode]="'checkbox'" 
+                                        ></jqxGrid> -->
+                                    <!-- <jqxGrid #jqxGridAlmacenes (onRowselect)="seleccionarRegistro($event)" [width]="'100%'"
+                                        [source]="dataAdapter" [columns]="columns" [selectionmode]="'multiplerowsadvanced'">
+                                    </jqxGrid> -->
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-12 form-group">
+                                    <div class="form-group form-check my-4">
+                                        <input type="checkbox" formControlName="is_active" class="form-check-input"/>
+                                        <label for="acceptTerms" class="form-check-label">
+                                            {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="card-header">
+
+
+
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#precios-tab-pane" type="button" role="tab" aria-controls="precios-tab-pane" aria-selected="true">
+                                        Venta / Precios
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#impuestos-tab-pane" type="button" role="tab" aria-controls="impuestos-tab-pane" aria-selected="true">
+                                        Venta / Precios
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link btn-primary" data-toggle="tab" href="#imagenes-tab-pane" role="tab" aria-controls="imagenes-tab-pane" aria-selected="false">
+                                        Imagenes
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <!-- TAB PRECIOS -->
+                                <div class="tab-pane fade show active" id="precios-tab-pane" role="tabpanel" aria-labelledby="precios-tab">
+                                    <table class="table table-sm table-bordered" style="width: 98%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%;">
+                                                    Precios disponibles
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    Precio base
+                                                </th>
+                                                <!--<th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-success text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo1">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-danger text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo2">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-info text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo3">
+                                                    </div>
+                                                </th>
+                                                <th style="width: 15%;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-warning text-white" id="inputGroup-sizing-default">CANT</span>
+                                                        <input type="number" class="form-control" formControlName="cantidad_grupo4">
+                                                    </div>
+                                                </th>-->
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="precios">
+                                            <tr *ngFor="let precio of getFormArray('precios', this.form).controls; 
+                                            let i = index;" [formGroupName]="i">
+                                                <td>
+                                                    <strong>
+                                                        {{ precio.get("nombre")?.value | uppercase }}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="base">
+                                                </td>
+                                                <!--
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo1">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo2">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo3">
+                                                </td>
+                                                <td>
+                                                    <input type="number" placeholder="0.00" class="form-control" style="border:none;margin-left:0.5rem;" formControlName="grupo4">
+                                                </td>
+                                                -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- TAB IMPUESTOS -->
+                                <div class="tab-pane fade" id="impuestos-tab-pane" role="tabpanel" aria-labelledby="impuestos-tab">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <strong for="">
+                                                Impuestos
+                                            </strong>
+                                            <ul formArrayName="impuestos" class="list-group">
+                                                <li *ngFor="let tax of getFormArray('impuestos', this.form).controls;let i = index;" class="list-group-item list-group-item-action" [formGroupName]="i">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" formControlName="seleccionado" name="seleccionado" (change)="agregarEliminarImpuesto(i, $event)"/>
+                                                        <label class="form-check-label" for="seleccionado">{{ tax.get("tipo")?.value == trasladoRetencion.Traslado ? '+' : '-' }} {{ tax.get("nombre")?.value | uppercase }}</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-6 col-lg-6">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <span>Producto servicio</span>
+                                                    <input 
+                                                        id="typeadead-template"
+                                                        type="text"
+                                                        class="form-control"
+                                                        formControlName="producto_servicio"
+                                                        [ngbTypeahead]="searchProductoServicio"
+                                                        [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                                        [inputFormatter]="inputFormatterProductoServicioClaveUnidad"
+                                                        [resultTemplate]="rps"
+                                                        (selectItem)="selectedProductoServicio($event.item)"
+                                                        #instance="ngbTypeahead"
+                                                        placeholder="01010101 - No existe en el catálogo">
+                                                    <ng-template #rps let-r="result" let-t="term">
+                                                        <div class="media p-1">
+                                                            <div class="media-body">
+                                                                <span>
+                                                                    <strong class="text-primary">{{r.clave}}</strong>
+                                                                    {{r.descripcion}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                                    <div *ngIf="searchingPS">
+                                                        <small class="form-text text-muted">Buscando...</small>
+                                                    </div>
+                                                    <div *ngIf="searchFailedPS">
+                                                        <div class="invalid-feedback">Sin resultados.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <span>Unidad de medida</span>
+                                                    <input 
+                                                        id="typeadead-template"
+                                                        type="text"
+                                                        class="form-control"
+                                                        formControlName="unidad_medida"
+                                                        [ngbTypeahead]="searchUnidadMedida"
+                                                        [resultFormatter]="resultFormatterProductoServicioClaveUnidad"
+                                                        [inputFormatter]="inputFormatterProductoServicioClaveUnidad"
+                                                        [resultTemplate]="rum"
+                                                        (selectItem)="selectedUnidadMedida($event.item)"
+                                                        #instance="ngbTypeahead"
+                                                        placeholder="E48 - Unidad de servicio">
+                                                    <ng-template #rum let-r="result" let-t="term">
+                                                        <div class="media p-1">
+                                                            <div class="media-body">
+                                                                <span>
+                                                                    <strong class="text-primary">{{r.clave}}</strong>
+                                                                    {{r.descripcion}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </ng-template>
+                                                    <div *ngIf="searchingUM">
+                                                        <small class="form-text text-muted">Buscando...</small>
+                                                    </div>
+                                                    <div *ngIf="searchFailedUM">
+                                                        <div class="invalid-feedback">Sin resultados.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- TAB IMAGENES-->
+                                <div class="tab-pane fade" id="imagenes-tab-pane" role="tabpanel" aria-labelledby="imagenes-tab">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col">
+                                                <strong>Imagenes del servicio</strong>
+                                            </div>
+                                        </div>
+            
+                                        <table formArrayName="imagenes" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 70%;">
+                                                        Imagen
+                                                    </th>
+                                                    <th style="width: 10%;">
+                                                        Defaul
+                                                    </th>
+                                                    <th style="width: 30%;" class="text-right">
+                                                        <button type="button" class="btn btn-sm btn-primary" (click)="addImagen()">
+                                                            <i class="fa fa-plus"></i>
+                                                            Agregar
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let imagen of getFormArray('imagenes', this.form).controls; 
+                                                            let i = index;" [formGroupName]="i">
+                                                    <td class="align-middle">
+                                                        <div class="input-group mb-3" *ngIf="!imagen.get('subloaded')?.value">
+                                                            <div class="custom-file">
+                                                                <input type="file" class="custom-file-input" id="inputGroupFile03" *ngIf="!imagen.get('subloaded')?.value" (change)="onFileChange(i, $event)" aria-describedby="inputGroupFileAddon03">
+                                                                <label class="custom-file-label" for="inputGroupFile03">Seleccione una imagen</label>
+                                                            </div>
+                                                        </div>
+                                                        <img *ngIf="imagen.get('subloaded')?.value" src="{{ imagen.get('base_64')?.value }}" style="max-width: 150px;max-height:150px;">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input class="form-check-input" type="checkbox" formControlName="default" (change)="setDefaultImg(i, $event)">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" class="btn btn-sm btn-danger" (click)="eliminarImagen(i)">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                    <i class="fas fa-times fa-lg fa-fw"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                    <i class="fas fa-save fa-lg fa-fw"></i>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalCEKit let-modal>
+
+    </ng-template>
+</section>

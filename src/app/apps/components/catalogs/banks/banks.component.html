@@ -1,0 +1,156 @@
+<section class="container-fluid">
+    <app-header-apps-label appName="Bancos" class="row"></app-header-apps-label>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            Estatus
+            <ng-select 
+            [(ngModel)]="filter.is_active"
+            style="width: 100%;"
+            [markFirst]="true">
+                <ng-option [value]="null">Todos</ng-option>
+                <ng-option [value]="true">Activos</ng-option>
+                <ng-option [value]="false">Inactivos</ng-option>
+            </ng-select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-9">
+            <span for="filtro_razon_social">Nombre</span>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="filter.nombre" placeholder="Nombre banco" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" (click)="load()">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn-sm btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Bancos
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupABC" style="text-align: left;">
+                    <button class="dropdown-item btn btn-danger" (click)="openCreate()">
+                        <i class="fas fa-plus fa-lg fa-fw text-success"></i>
+                        Agregar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openEdit()">
+                        <i class="fas fa-pencil-alt fa-lg fa-fw text-warning"></i>
+                        Editar
+                    </button>
+                    
+                    <button class="dropdown-item btn btn-danger" (click)="openView()">
+                        <i class="fas fa-clipboard fa-lg fa-fw text-primary"></i>
+                        Visualizar
+                    </button>
+
+                    <button class="dropdown-item btn btn-danger" (click)="openDelete()">
+                        <i class="fas fa-trash-alt fa-lg fa-fw text-danger"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridBanks
+                (onRowselect)="seleccionarRegistro($event)"
+                [width]="'100%'"
+                [source]="dataAdapter" 
+                [columns]="columns"
+                [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <ng-template #modalCE let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar banco</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.close()"></button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="save($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-7 col-sm-12 col-lg-7">
+                                <span for="razon_social"><strong class="text-danger">*</strong> Nombre</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="nombre" placeholder="Nombre banco">
+                                <div *ngIf="getFormControl('nombre', form)?.errors && getFormControl('nombre', form)?.touched">
+                                    <small *ngIf="getFormControl('nombre', form)?.hasError('required')" class="text-danger">
+                                        La <strong>nombre</strong> es requerida.
+                                    </small>
+                                    <small *ngIf="getFormControl('nombre', form)?.getError('bankNameAvailable') != null" class="text-danger">
+                                        El banco <strong>{{ form.get('nombre')?.value }}</strong> ya se encuentra dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-7 col-sm-12 col-lg-5">
+                                <span for="rfc"><strong class="text-danger">*</strong> Rfc</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="rfc" minlength="12" maxlength="13" placeholder="XAXX010101000">
+                                <div *ngIf="getFormControl('rfc', form)?.errors && getFormControl('rfc', form)?.touched">
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('minLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona moral de 12 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.hasError('maxLength')" class="text-danger">
+                                        El <strong>RFC</strong> de persona fisica es de 13 caracteres.
+                                    </small>
+                                    <small *ngIf="getFormControl('rfc', form)?.getError('bankRFCAvailable') != null" class="text-danger">
+                                        El Rfc <strong>{{ form.get('rfc')?.value }}</strong> ya se ha dado de alta.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <strong class="text-primary">Otros datos</strong>
+                        <hr style="margin-top: 0;">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span>Tamaño cuenta</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="tamanio_cuenta" placeholder="10">
+                            </div>
+                            <div class="col-md-5 col-sm-12 col-lg-5">
+                                <span>Tamaño cuenta</span>
+                                <input type="text" class="form-control form-control-sm" formControlName="tamanio_clabe" placeholder="18">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group form-check my-4">
+                                    <input type="checkbox" formControlName="is_active" id="is_active" class="form-check-input"/>
+                                    <label for="acceptTerms" class="form-check-label">
+                                        {{ getFormControl('is_active', form)?.value ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="modal.close('No')">
+                        <i class="fas fa-times fa-lg fa-fw"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" color="accent" aria-label="">
+                        <i class="fas fa-save fa-lg fa-fw"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+    
+</section>

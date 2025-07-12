@@ -1,0 +1,239 @@
+<header id="header-page" class="fixed-top header-scrolled">
+    <div class="container d-flex align-items-center">
+        <h1 class="logo me-auto">
+            <a href="/">
+                <img src="/assets/image/creafactura.svg" alt="Logo Crea Factura" height="60">
+            </a>
+        </h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li>
+                    <a class="nav-link scrollto active" [routerLink]="['/']">
+                        <i class="fas fa-th fa-lg fa-fw"></i> 
+                        &nbsp;
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="dropdown">
+                    <span>
+                        Catalogos
+                        <i class="fas fa-angle-down fa-xs fa-fw"></i>
+                    </span>
+                    <ul>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Empresas</a>
+                            <i class="fas fa-angle-down fa-sm fa-fw float-end position-absolute top-50 start-50 translate-middle"></i>
+                            <ul>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/empresas']">
+                                        <!-- <i class="fas fa-building fa-lg fa-fw"></i> -->
+                                        <img src="/assets/image/icons/app/30/company.png" alt="" height="25">
+                                        &nbsp;
+                                        Empresas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/empresas/sucursales']">
+                                        <img src="/assets/image/icons/app/30/sucursal.png" alt="" height="25">
+                                        &nbsp;
+                                        Sucursales
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/empresas/cuentas']">
+                                        <img src="/assets/image/icons/app/30/bank-account.png" alt="" height="25">
+                                        &nbsp;
+                                        Cuentas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/departamentos-empresa']">
+                                        <img src="/assets/image/icons/app/30/department.png" alt="" height="25">
+                                        &nbsp;
+                                        Departamentos
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/empresas/rpatronales']">
+                                        <img src="/assets/image/icons/app/30/rpatronal.png" alt="" height="25">
+                                        &nbsp;
+                                        R. Patronales
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Clientes</a>
+                            <i class="fas fa-angle-down fa-sm fa-fw float-end position-absolute top-50 start-50 translate-middle"></i>
+                            <ul>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/clientes']">
+                                        <img src="/assets/image/icons/app/30/customer.png" alt="" height="25">&nbsp;
+                                        Clientes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/cuentas-cliente']">
+                                        <img src="/assets/image/icons/app/30/bank-account.png" alt="" height="25">&nbsp;
+                                        Cuentas
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        
+
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Empleados</a>
+                            <i class="fas fa-angle-down fa-sm fa-fw float-end position-absolute top-50 start-50 translate-middle"></i>
+                            <ul>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/departamentos-empresa']">
+                                        <img src="/assets/image/icons/app/30/worker.png" alt="" height="25">
+                                        &nbsp;
+                                        Empleados
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+
+
+                        <li class="dropdown">
+                            <a href="javascript:void(0)">Otros</a>
+                            <i class="fas fa-angle-down fa-sm fa-fw float-end position-absolute top-50 start-0 translate-middle"></i>
+                            <ul>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/bancos']">
+                                        <img src="/assets/image/icons/app/30/bank.png" alt="" height="25">&nbsp;
+                                        Bancos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/proveedores']">
+                                        <img src="/assets/image/icons/app/30/supplier.png" alt="" height="25">&nbsp;
+                                        Proveedores
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/app/catalogos/productos']">
+                                        <img src="/assets/image/icons/app/30/product.png" alt="" height="25">&nbsp;
+                                        Productos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+
+                        
+                    </ul>
+                </li>
+
+                <li class="dropdown" *ngIf="this.user.is_staff">
+                    <span>
+                        Herramientas
+                        <i class="fas fa-angle-down fa-xs fa-fw"></i>
+                    </span>
+                    <ul>
+                        <li>
+                            <a [routerLink]="['/app/herramientas/usuarios']">
+                                <img src="/assets/image/icons/app/30/users.png" alt="" height="25">
+                                Usuarios
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/app/herramientas/plantillas']">
+                                <img src="/assets/image/icons/app/30/template.png" alt="" height="25">
+                                Plantillas
+                            </a>
+                        </li>
+
+                        <li>
+                            <a [routerLink]="['/app/herramientas/plantillas']">
+                                <img src="/assets/image/icons/app/30/clase-riesgo.png" alt="" height="25">
+                                Clases de riesgo
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <span>
+                        Facturación
+                        <i class="fas fa-angle-down fa-lg fa-fw"></i>
+                    </span>
+                    <ul>
+                        <li>
+                            <a [routerLink]="['/app/facturacion/documentos']">
+                                <img src="/assets/image/icons/app/30/invoice.png" alt="" height="25">
+                                &nbsp;Documentos
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/app/facturacion/impuestos']">
+                                <img src="/assets/image/icons/app/30/tax.png" alt="" height="25">
+                                &nbsp;Impuestos
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/app/cotizaciones']">
+                                <img src="/assets/image/icons/app/30/cotizacion.png" alt="" height="25">
+                                
+                                &nbsp;Cotizaciones
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/app/ventas']">
+                                <img src="/assets/image/icons/app/30/sale.png" alt="" height="25">
+                                
+                                &nbsp;Ventas
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <div class="dropdown">
+                    <img *ngIf="!this.user.has_image" src="/assets/image/icons/user-50.png" alt="" class="user-pic" (click)="this.toggleMenu()">
+                    <img *ngIf="this.user.has_image" src="/assets/image/icons/user.png" alt="" class="user-pic" (click)="this.toggleMenu()">
+                </div>
+            </ul>
+            <i class="mobile-nav-toggle fas fa-bars"></i>
+            <div #subMenu class="sub-menu-wrap">
+                <div class="sub-menu">
+                    <div class="user-info">
+                        <img src="/assets/image/icons/profile.png" alt="Image">
+                        <div>
+                            <div>
+                                <strong>{{ this.user.first_name }} {{ this.user.last_name }} </strong>
+                            </div>
+                            <div>
+                                <small>{{ this.user.email }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <a class="sub-menu-link" (click)= "this.goTo('/app/profile')">
+                        <img src="/assets/image/icons/profile.png" alt="A">
+                        <p>Editar perfil</p>
+                        <span>
+                            <i class="fas fa-angle-right fa-xs fa-fw"></i>
+                        </span>
+                    </a>
+                    <a class="sub-menu-link" (click)="this.logout()">
+                        <img src="/assets/image/icons/logout.png" alt="A">
+                        <p>Salir</p>
+                        <span>
+                            <i class="fas fa-angle-right fa-xs fa-fw"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </nav><!-- .navbar -->
+    </div>
+</header><!-- End Header -->

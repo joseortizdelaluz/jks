@@ -1,0 +1,123 @@
+
+<div class="container my-5 py-5">
+    <form [formGroup]="form1" (ngSubmit)="buscame($event)" *ngIf="step == 1">
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-3"></div>
+            <div class="col-sm-12 col-md-8 col-lg-6">
+                
+                
+                    <!-- <label class="form-label"><span class="text-danger">*</span> Nombre de usuario o Correo electrónico</label>
+                    <div class="input-group mb-3">
+                        <button class="btn btn-info" type="button" id="button-addon1" (click)="generatePassword()">
+                            <i class="fas fa-calculator fa-lg fa-fw"></i>
+                            Generar
+                        </button>
+                        <input type="text" class="form-control" formControlName="email_or_username" placeholder="ejemplo@gmail.com o username">
+                        <button class="btn btn-info" type="button" id="button-addon2" (click)="viewPassword()">
+                            <i class="fas {{type == 'password' ? 'fa-eye-slash' : 'fa-eye'}} fa-sm fa-fw"></i>
+                        </button>
+                    </div> -->
+                
+                <span>
+                    <strong class="text-danger">*</strong> Nombre de usuario o Correo electrónico
+                </span>
+
+
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" formControlName="email_or_username" placeholder="ejemplo@gmail.com o username">
+                    <button class="btn btn-info" type="submit" >
+                        <i class="fas fa-search fa-sm fa-fw"></i>
+                        Buscarme
+                    </button>
+                </div>
+                <div *ngIf="getFormControl('email_or_username', form1)?.errors && getFormControl('email_or_username', form1)?.touched">
+                    <small *ngIf="getFormControl('email_or_username', form1)?.hasError('required')" class="text-danger">
+                        El <strong>correo o nombre de usuario</strong> es requerido.
+                    </small>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-3"></div>
+        </div>
+    </form>
+
+    <form [formGroup]="form2" (ngSubmit)="changePassword($event)" *ngIf="step == 2">
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-lg-3"></div>
+            <div class="col-sm-12 col-md-8 col-lg-6">
+                
+                <div class="form-group">
+                    <span><strong class="text-danger">*</strong> Email</span>
+                    <input type="email" class="form-control" formControlName="email_or_username" placeholder="ejemplo@gmail.com" [readOnly]="true">
+                    <div *ngIf="getFormControl('email_or_username', form2)?.errors && getFormControl('email_or_username', form2)?.touched">
+                        <small *ngIf="getFormControl('email_or_username', form2)?.hasError('required')" class="text-danger">
+                            El <strong>correo o nombre de usuario</strong> es requerido.
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <span><strong class="text-danger">*</strong> Clave</span>
+                    <input type="text" class="form-control" formControlName="clave" placeholder="568924">
+                    <div *ngIf="getFormControl('clave', form2)?.errors && getFormControl('clave', form2)?.touched">
+                        <small *ngIf="getFormControl('clave', form2)?.hasError('required')" class="text-danger">
+                            Proporcione la <strong>clave</strong> que recibio en su correo.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span><strong class="text-danger">*</strong> Nueva contraseña</span>
+                    <div class="input-group mb-3">
+                        <button type="button" class="btn btn-info btn-sm" (click)="generatePassword()">
+                            <!-- <i class="fa fa-retweet" aria-hidden="true"></i> -->
+                            <i class="fas fa-calculator fa-lg fa-fw"></i>
+                            Generar
+                        </button>
+                        <input [type]="type" class="form-control" autocomplete="off" formControlName="password">
+                        <button type="button" class="btn btn-info btn-sm" (click)="viewPassword()">
+                            <i class="fas {{type == 'password' ? 'fa-eye-slash' : 'fa-eye'}} fa-sm fa-fw"></i>
+                        </button>
+                    </div>
+                    <div *ngIf="getFormControl('password', form2)?.errors && getFormControl('password', form2)?.touched">
+                        <small *ngIf="getFormControl('password', form2)?.hasError('required')" class="text-danger">
+                            La <strong>contraseña</strong> es requerida.
+                        </small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-search fa-sm fa-fw"></i>
+                    <strong>Recuperar mi contraseña</strong>
+                </button>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-3"></div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-2 col-lg-3"></div>
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <div class="form-group py-3">
+                ¿Aun no tiene una cuenta?
+                <strong>
+                    <a [routerLink]="['/registro']">Quiero registrarme</a>
+                </strong>
+            </div>
+            <div class="form-group">
+                ¿No recibio la clave?
+                <button type="button" class="btn btn-link" (click)="reenviarClave()">
+                    Volver a enviar
+                </button>
+            </div>
+            <div class="form-group">
+                <strong>
+                    <a [routerLink]="['/login']">Iniciar sesión</a>
+                </strong>
+            </div>
+
+            
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-3"></div>
+    </div>
+</div>

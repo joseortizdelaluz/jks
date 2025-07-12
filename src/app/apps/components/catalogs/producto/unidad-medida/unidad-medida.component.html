@@ -1,0 +1,102 @@
+<section class="container-fluid my-5 py-5">
+    <mat-toolbar>
+        <button mat-button [disabled]="true">
+            <mat-icon class="color_green">straighten</mat-icon>
+            <strong>Unidades de medida</strong>
+        </button>
+        <button mat-button [matMenuTriggerFor]="operaciones">
+            Operaciones
+        </button>
+        <mat-menu #operaciones="matMenu">
+            <button mat-menu-item (click)="newEditUnitMesured()"><mat-icon>add</mat-icon>Nuevo</button>
+            <button mat-menu-item (click)="newEditUnitMesured(true)"><mat-icon>edit</mat-icon>Editar</button>
+            <button mat-menu-item (click)="deleteUnidadMedida()"><mat-icon>delete</mat-icon>Eliminar</button>
+        </mat-menu>
+        <span class="example-spacer"></span>
+    </mat-toolbar>
+    
+    <div class="row">
+        <div class="col">
+            <jqxGrid #jqxGridProveedores (onRowselect)="seleccionarRegistro($event)" [width]="'100%'"
+                [source]="dataAdapter" [columns]="columns" [selectionmode]="'multiplerowsadvanced'">
+            </jqxGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small class="text-primary">
+                Seleccionados: {{ seleccionados }}
+            </small>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+
+    <!--Modal crear editar unidad de medida-->
+    <ng-template #modalUnitMesured let-modal>
+        <div class="modal-content">
+            <div class="modal-header" color="primary">
+                <h5 class="modal-title">Crear / Editar unidad de medida</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="modal.close('Cerrado desde la ventana')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="form" novalidate (ngSubmit)="saveUnitMesured($event)" class="py-2">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="form-group row">
+                            <label for="calle" class="col-sm-5 col-form-label">
+                                <strong class="text-danger">*</strong>
+                                Nombre
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="name" id="name" class="form-control form-control-sm" placeholder="Nombre" formControlName="name" autocomplete="off"/>
+                                <div *ngIf="nameField?.errors && nameField?.touched">
+                                    <div>
+                                        <small *ngIf="nameField?.hasError('required')" class="text-danger">
+                                            El <strong>nombre</strong> es requerido.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="calle" class="col-sm-5 col-form-label">
+                                Descripción
+                            </label>
+                            <div class="col-sm-7">
+                                <textarea type="text" name="description" id="description" rows="5" style="resize: none;" class="form-control form-control-sm" placeholder="Agregue acá su descripcion" formControlName="description" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="facturacion" class="col-sm-5 col-form-label">
+                                Estatus
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" formControlName="is_active" [checked]="is_active" [(ngModel)]="is_active">
+                                    <label class="form-check-label" for="facturacion">
+                                        {{ is_active ? 'Activo' : 'Inactivo' }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button mat-stroked-button type="button" data-dismiss="modal" (click)="modal.close('No')">
+                        <mat-icon>close</mat-icon>
+                        Cancelar
+                    </button>
+                    <button mat-raised-button type="submit" color="accent" aria-label="">
+                        <mat-icon>save</mat-icon>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-template>
+
+
+</section>
