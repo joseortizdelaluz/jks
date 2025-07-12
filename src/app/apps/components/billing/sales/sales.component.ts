@@ -83,13 +83,12 @@ export class SalesComponent implements OnInit{
       { name: 'cliente', type: 'string' },
       { name: 'sucursal', type: 'string' },
       { name: 'divisa', type: 'string' },
-      { name: 'fecha_creacion', type: 'string' },
+      { name: 'created_at', type: 'string' },
       { name: 'subtotal', type: 'float' },
       { name: 'descuento', type: 'float' },
       { name: 'traslados', type: 'float' },
       { name: 'retenciones', type: 'float' },
       { name: 'total', type: 'float' },
-      { name: 'created_at', type: 'string' },
     ]
   };
   
@@ -233,6 +232,7 @@ export class SalesComponent implements OnInit{
       observaciones: [null],
       detalles: this.formBuilder.array([]),
       is_active: [true],
+      created_at: [new Date(),]
     });
   }
 
